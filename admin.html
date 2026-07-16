@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <!-- Formulário com UPLOAD REAL -->
+    <!-- Formulário com LINK DA FOTO -->
     <div class="panel">
         <h2 id="formTitle">Nova Peça</h2>
         
@@ -41,13 +41,11 @@
             </select>
         </div>
 
-        <!-- UPLOAD DE ARQUIVO AQUI -->
+        <!-- CAMPO DE LINK AO INVÉS DE ARQUIVO -->
         <div class="form-group">
-            <label>Fotos (Envie direto do PC/Celular)</label>
-            <input type="file" id="pImagesFiles" multiple accept="image/*" class="file-input">
-            <small>Você pode selecionar várias fotos segurando Ctrl (PC) ou selecionando várias no celular.</small>
-            <!-- Guardamos as URLs antigas se for edição -->
-            <input type="hidden" id="pImagesUrlsOld">
+            <label>Link da Foto (ImgBB, Pinterest, Shein)</label>
+            <input type="text" id="pImagesUrls" placeholder="https://...">
+            <small>Dica: Para colocar mais de uma foto (carrossel), separe os links por vírgula.</small>
         </div>
 
         <div class="form-group">
@@ -59,7 +57,7 @@
         <button id="cancelBtn" class="btn-cancel" onclick="window.cancelEdit()" style="display: none;">Cancelar Edição</button>
     </div>
 
-    <!-- Lista -->
+    <!-- Lista de Produtos -->
     <div class="panel">
         <h2>Inventário</h2>
         <ul class="product-list" id="adminList">

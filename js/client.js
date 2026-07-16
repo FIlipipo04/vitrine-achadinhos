@@ -19,7 +19,6 @@ let allProducts = [];
 let currentCategory = 'Tudo';
 let currentSearch = '';
 
-// Escuta em tempo real
 onSnapshot(q, (snapshot) => {
     allProducts = [];
     snapshot.forEach((doc) => {
@@ -28,13 +27,11 @@ onSnapshot(q, (snapshot) => {
     applyFilters();
 });
 
-// Filtro de Texto
 document.getElementById('searchInput').addEventListener('keyup', (e) => {
-    currentSearch = e.target.value.toUpperCase();
+    currentSearch = e.target.value.replace('#', '').toUpperCase();
     applyFilters();
 });
 
-// Filtro de Categorias
 window.filterByCategory = (cat, btnElement) => {
     currentCategory = cat;
     document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
@@ -48,14 +45,14 @@ function applyFilters() {
         filtered = filtered.filter(p => p.categoria === currentCategory);
     }
     if(currentSearch !== '') {
-        filtered = filtered.filter(p => p.id.toUpperCase().includes(currentSearch));
+        filtered = filtered.filter(p => p.id.toUpperCase().includes(currentSearch) || (p.nome && p.nome.toUpperCase().includes(currentSearch)));
     }
     renderFeed(filtered);
 }
 
 window.copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(() => {
-        showToast(`Código ${text} copiado!`);
+        showToast(`${text} copiado!`);
     });
 };
 
@@ -65,71 +62,45 @@ function showToast(message) {
     toast.className = 'toast';
     toast.innerText = message;
     container.appendChild(toast);
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.3s ease';
-        setTimeout(() => toast.remove(), 300);
-    }, 2000);
+    setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
 }
-
-// Dots Carrossel
-window.updateDots = (carouselElement, cardUid) => {
-    const scrollPosition = carouselElement.scrollLeft;
-    const width = carouselElement.offsetWidth;
-    const index = Math.round(scrollPosition / width);
-    const dots = document.querySelectorAll(`.dot-group-${cardUid} .dot`);
-    dots.forEach((dot, idx) => {
-        if(idx === index) dot.classList.add('active');
-        else dot.classList.remove('active');
-    });
-};
 
 function renderFeed(productsToRender) {
     const feed = document.getElementById('feedContainer');
     feed.innerHTML = '';
 
     if (productsToRender.length === 0) {
-        feed.innerHTML = '<p class="empty-msg">Nenhum produto encontrado.</p>';
+        feed.innerHTML = '<p style="text-align: center; color: var(--text-muted); margin-top: 50px; font-weight: 500;">Nenhuma peça encontrada.</p>';
         return;
     }
 
     productsToRender.forEach(product => {
-        const images = product.images.split(',').map(img => img.trim());
-        const cat = product.categoria || 'Moda';
-        const cardUid = product.uid;
-        
+        // Separa os links por vírgula para criar o carrossel
+        let images = typeof product.images === 'string' ? product.images.split(',').map(img => img.trim()) : product.images;
+
+        const nomeProduto = product.nome || 'Peça Exclusiva';
         let carouselHTML = '';
-        let dotsHTML = '';
         
-        images.forEach((img, idx) => {
-            carouselHTML += `
-                <div class="carousel-item">
-                    <img src="${img}" alt="ID ${product.id}" loading="lazy">
-                    <span class="cat-badge">${cat}</span>
-                </div>`;
-            dotsHTML += `<div class="dot ${idx === 0 ? 'active' : ''}"></div>`;
+        images.forEach((img) => {
+            carouselHTML += `<div class="carousel-item"><img src="${img}" alt="${nomeProduto}" loading="lazy"></div>`;
         });
 
+        // HTML do card robusto/vidro
         const card = `
-            <div class="product-card">
+            <div class="glass-card">
                 <div class="carousel-wrapper">
-                    <div class="carousel-container" onscroll="updateDots(this, '${cardUid}')">
-                        ${carouselHTML}
-                    </div>
-                    ${images.length > 1 ? `<div class="carousel-dots dot-group-${cardUid}">${dotsHTML}</div>` : ''}
+                    <div class="carousel-container">${carouselHTML}</div>
                 </div>
-                <div class="product-info">
-                    <div class="product-id">
-                        ID: ${product.id.toUpperCase()}
-                        <button class="copy-btn" onclick="copyToClipboard('${product.id.toUpperCase()}')" title="Copiar código">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                        </button>
+                <div class="card-info">
+                    <div class="card-text">
+                        <h3>${nomeProduto}</h3>
+                        <span>#${product.id.toUpperCase()}</span>
                     </div>
+                    <button class="copy-btn" onclick="copyToClipboard('#${product.id.toUpperCase()}')" title="Copiar ID">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    </button>
                 </div>
-                <a href="${product.link}" target="_blank" class="btn-buy">
-                    <span>Ir para Loja</span>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </a>
+                <a href="${product.link}" target="_blank" class="btn-buy">EU QUERO</a>
             </div>
         `;
         feed.innerHTML += card;

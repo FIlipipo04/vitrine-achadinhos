@@ -1,204 +1,98 @@
+/* PALETA EDITORIAL: Maison Rouge / Haus of Wild */
 :root { 
-    --bg-dark: #0a0a0c;
-    --surface: #121215;
-    --surface-light: #18181c;
-    --gold: #d4af37;
-    --gold-muted: #aa8c2c;
-    --text-white: #ffffff;
-    --text-muted: #8e8e93;
-    --border: rgba(212, 175, 55, 0.15);
-    --glass: rgba(10, 10, 12, 0.85);
+    --bg-dark: #1f0b0b;       /* Fundo vinho ultra profundo */
+    --surface: #2d1212;       /* Fundo dos cartões */
+    --text-primary: #f2e7dc;  /* Bege areia (Luxo) */
+    --text-muted: #bdaea3;    /* Bege escurecido */
+    --accent: #5e1c1c;        /* Vermelho Maison */
+    --border: rgba(242, 231, 220, 0.1);
+    --glass: rgba(31, 11, 11, 0.85);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 body { 
     background-color: var(--bg-dark); 
-    color: var(--text-white); 
+    color: var(--text-primary); 
     font-family: 'Montserrat', sans-serif; 
     display: flex; 
     justify-content: center; 
     min-height: 100vh;
 }
 
-.container { 
-    width: 100%; 
-    max-width: 450px; 
-    background-color: var(--bg-dark);
-    display: flex; 
-    flex-direction: column; 
-    position: relative;
-}
+.container { width: 100%; max-width: 480px; display: flex; flex-direction: column; position: relative; }
 
-/* Header Fixo Minimalista */
+/* Header de Revista */
 .sticky-header {
-    position: sticky;
-    top: 0;
-    z-index: 99;
-    background: var(--glass);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 20px 20px 15px 20px;
+    position: sticky; top: 0; z-index: 99;
+    background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border); padding: 25px 20px 20px;
 }
 
-.header { text-align: center; margin-bottom: 15px; }
-.header h2 { font-family: 'Cinzel', serif; font-weight: 400; font-size: 0.9rem; color: var(--gold); letter-spacing: 5px; }
-.header h1 { font-family: 'Cinzel', serif; font-weight: 600; font-size: 2.2rem; letter-spacing: 6px; color: var(--text-white); margin-top: 2px; }
+.header { text-align: center; margin-bottom: 20px; }
+.header h2 { font-family: 'Montserrat', sans-serif; font-weight: 400; font-size: 0.7rem; color: var(--text-muted); letter-spacing: 4px; text-transform: uppercase; }
+.header h1 { font-family: 'Playfair Display', serif; font-weight: 400; font-style: italic; font-size: 2.8rem; color: var(--text-primary); margin-top: 5px; letter-spacing: 1px; }
 
 /* Busca elegante */
 .search-container { position: relative; }
 .search-input { 
-    width: 100%; 
-    padding: 14px 20px 14px 45px; 
-    border: 1px solid rgba(255, 255, 255, 0.1); 
-    border-radius: 8px; 
-    background-color: rgba(255, 255, 255, 0.03); 
-    color: var(--text-white); 
-    font-size: 0.9rem; 
-    outline: none; 
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    width: 100%; padding: 14px 20px 14px 45px; 
+    border: none; border-bottom: 1px solid var(--text-muted);
+    background-color: transparent; color: var(--text-primary); 
+    font-size: 0.95rem; font-family: 'Playfair Display', serif; font-style: italic; outline: none; transition: 0.3s; 
 }
-.search-input::placeholder { color: var(--text-muted); }
-.search-input:focus { 
-    border-color: var(--gold); 
-    background-color: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-}
-.search-icon { 
-    position: absolute; 
-    left: 15px; 
-    top: 50%; 
-    transform: translateY(-50%); 
-    color: var(--text-muted); 
-    display: flex;
-}
+.search-input::placeholder { color: rgba(189, 174, 163, 0.6); }
+.search-input:focus { border-bottom-color: var(--text-primary); }
+.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); }
 
-/* Categorias */
-.categories { display: flex; gap: 8px; overflow-x: auto; padding: 15px 20px; scrollbar-width: none; }
+/* Categorias Minimalistas */
+.categories { display: flex; gap: 20px; overflow-x: auto; padding: 20px; scrollbar-width: none; border-bottom: 1px solid var(--border); }
 .categories::-webkit-scrollbar { display: none; }
 .cat-btn { 
-    padding: 8px 18px; 
-    background: var(--surface); 
-    border: 1px solid rgba(255, 255, 255, 0.05); 
-    color: var(--text-muted); 
-    border-radius: 4px; 
-    font-size: 0.75rem; 
-    font-weight: 500; 
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer; 
-    transition: all 0.3s ease; 
+    background: transparent; border: none; color: var(--text-muted); font-size: 0.8rem; font-weight: 300; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: 0.3s; white-space: nowrap; 
 }
-.cat-btn.active { 
-    background: var(--text-white); 
-    color: var(--bg-dark); 
-    font-weight: 600;
-    border-color: var(--text-white);
-}
+.cat-btn.active { color: var(--text-primary); font-weight: 500; border-bottom: 1px solid var(--text-primary); padding-bottom: 4px; }
 
-/* Cards Premium */
-.feed { display: flex; flex-direction: column; gap: 30px; padding: 10px 20px 50px 20px; }
-.product-card { 
-    display: flex; 
-    flex-direction: column; 
-    background: var(--surface); 
-    border-radius: 12px; 
-    padding: 12px; 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    animation: fadeIn 0.5s ease-out forwards;
-}
+/* Cards Editoriais */
+.feed { display: flex; flex-direction: column; gap: 40px; padding: 30px 20px 60px; }
+.product-card { display: flex; flex-direction: column; animation: fadeIn 0.8s ease-out forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.carousel-wrapper { position: relative; width: 100%; border-radius: 8px; overflow: hidden; }
+/* Carrossel de Imagens */
+.carousel-wrapper { position: relative; width: 100%; overflow: hidden; margin-bottom: 15px; }
 .carousel-container { width: 100%; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
 .carousel-container::-webkit-scrollbar { display: none; }
-.carousel-item { min-width: 100%; scroll-snap-align: center; position: relative; }
-.carousel-item img { width: 100%; height: 430px; object-fit: cover; display: block; }
+.carousel-item { min-width: 100%; scroll-snap-align: center; }
+.carousel-item img { width: 100%; height: 500px; object-fit: cover; display: block; border-radius: 2px; }
 
-/* Dots */
-.carousel-dots { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 5; background: rgba(0,0,0,0.5); padding: 4px 8px; border-radius: 20px; }
-.dot { width: 5px; height: 5px; background: rgba(255,255,255,0.4); border-radius: 50%; transition: all 0.2s ease; }
-.dot.active { background: var(--text-white); width: 10px; border-radius: 10px; }
+/* Tipografia do Produto (Novo) */
+.product-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 15px; padding: 0 5px; }
+.title-group { display: flex; flex-direction: column; gap: 5px; }
+.product-name { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 400; color: var(--text-primary); line-height: 1.2; }
+.product-id { font-family: 'Montserrat', sans-serif; font-size: 0.8rem; font-weight: 400; color: var(--text-muted); letter-spacing: 1px; }
 
-.cat-badge { 
-    position: absolute; 
-    top: 12px; 
-    right: 12px; 
-    background: var(--bg-dark); 
-    color: var(--gold); 
-    padding: 5px 10px; 
-    border-radius: 4px; 
-    font-size: 0.65rem; 
-    font-weight: 600; 
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    border: 1px solid var(--border);
-}
-
-/* Info e Botões */
-.product-info { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-top: 12px; padding: 0 4px; }
-.product-id { font-weight: 500; font-size: 1rem; color: var(--text-white); letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
 .copy-btn { 
-    background: transparent; 
-    border: 1px solid rgba(255,255,255,0.1); 
-    color: var(--text-muted); 
-    cursor: pointer; 
-    padding: 6px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    transition: 0.2s;
+    background: transparent; border: 1px solid var(--border); color: var(--text-muted); cursor: pointer; padding: 8px; border-radius: 50%; display: flex; align-items: center; transition: 0.2s; 
 }
-.copy-btn:hover { border-color: var(--gold); color: var(--gold); }
+.copy-btn:hover { border-color: var(--text-primary); color: var(--text-primary); }
 
+/* Botão Maison */
 .btn-buy { 
-    width: 100%; 
-    margin-top: 12px; 
-    padding: 14px; 
-    background: var(--text-white); 
-    color: var(--bg-dark); 
-    text-decoration: none; 
-    border-radius: 6px; 
-    font-weight: 600; 
-    text-align: center; 
-    text-transform: uppercase; 
-    font-size: 0.8rem; 
-    letter-spacing: 1.5px; 
-    transition: all 0.2s ease; 
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+    width: 100%; padding: 16px; background: var(--text-primary); color: var(--bg-dark); 
+    text-decoration: none; font-weight: 500; text-align: center; text-transform: uppercase; 
+    font-size: 0.85rem; letter-spacing: 2px; transition: 0.3s; 
 }
-.btn-buy:hover { opacity: 0.9; }
+.btn-buy:hover { background: #dcc8b6; }
 
 /* Skeletons */
-.skeleton { background: linear-gradient(90deg, #121215 25%, #18181c 50%, #121215 75%); background-size: 200% 100%; animation: loading 1.5s infinite; border-radius: 8px; }
-.skel-img { width: 100%; height: 430px; }
-.skel-text { width: 40%; height: 20px; margin-top: 15px; }
-.skel-btn { width: 100%; height: 45px; margin-top: 15px; }
+.skeleton { background: linear-gradient(90deg, #2d1212 25%, #3a1818 50%, #2d1212 75%); background-size: 200% 100%; animation: loading 1.5s infinite; }
+.skel-img { width: 100%; height: 500px; margin-bottom: 15px; }
+.skel-title { width: 60%; height: 24px; margin-bottom: 8px; }
+.skel-id { width: 25%; height: 14px; margin-bottom: 20px; }
+.skel-btn { width: 100%; height: 50px; }
 @keyframes loading { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 
 /* Toasts */
-.toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 1000; width: 80%; max-width: 280px; }
-.toast { 
-    background: var(--surface-light); 
-    color: var(--text-white); 
-    border: 1px solid var(--border);
-    padding: 10px 18px; 
-    border-radius: 6px; 
-    font-weight: 500; 
-    font-size: 0.8rem; 
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.8); 
-    opacity: 0; 
-    transform: translateY(15px); 
-    animation: slideUp 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; 
-}
+.toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
+.toast { background: var(--text-primary); color: var(--bg-dark); padding: 12px 24px; border-radius: 2px; font-weight: 500; font-size: 0.85rem; letter-spacing: 1px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0; transform: translateY(15px); animation: slideUp 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards; }
 @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - Achadinhos</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Dress Mode - Atelier (Admin)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/admin.css">
 </head>
 <body>
@@ -12,75 +12,63 @@
 <div class="admin-container">
     <div style="grid-column: 1 / -1;">
         <div class="header-nav">
-            <h1>Controle da Vitrine</h1>
-            <a href="index.html" target="_blank" class="btn-view">Visualizar Vitrine ↗</a>
+            <h1>Atelier Control</h1>
+            <a href="index.html" target="_blank" class="btn-view">Ver Vitrine ↗</a>
         </div>
     </div>
 
-    <div class="dashboard">
-        <div class="stat-card">
-            <span>Total de Produtos</span>
-            <h3 id="countTotal">0</h3>
-        </div>
-        <div class="stat-card">
-            <span>Servidor Banco</span>
-            <h3 style="color: var(--success); font-size: 1.1rem; margin-top: 5px;">Online 🟢</h3>
-        </div>
-    </div>
-
+    <!-- Formulário com UPLOAD REAL -->
     <div class="panel">
-        <h2 id="formTitle">Cadastrar Novo Produto</h2>
+        <h2 id="formTitle">Nova Peça</h2>
+        
         <div class="form-group">
-            <label>Código do Produto (ID)</label>
+            <label>Nome da Peça</label>
+            <input type="text" id="pNome" placeholder="Ex: Vestido Maison Rouge">
+        </div>
+
+        <div class="form-group">
+            <label>ID (Código TikTok)</label>
             <input type="text" id="pId" placeholder="Ex: LOOK01">
         </div>
         
         <div class="form-group">
             <label>Categoria</label>
             <select id="pCat">
-                <option value="Roupas">Roupas</option>
-                <option value="Sapatos">Sapatos</option>
-                <option value="Acessórios">Acessórios</option>
-                <option value="Casa">Casa</option>
-                <option value="Outros">Outros</option>
+                <option value="Dresses">Dresses (Vestidos)</option>
+                <option value="Tops">Tops (Blusas)</option>
+                <option value="Bottoms">Bottoms (Calças/Saias)</option>
+                <option value="Accessories">Accessories (Acessórios)</option>
             </select>
         </div>
 
+        <!-- UPLOAD DE ARQUIVO AQUI -->
         <div class="form-group">
-            <label>Links das Imagens</label>
-            <textarea id="pImages" rows="3" placeholder="Cole os links separados por vírgula..."></textarea>
-            <small>Adicione mais de uma imagem para ativar o carrossel.</small>
+            <label>Fotos (Envie direto do PC/Celular)</label>
+            <input type="file" id="pImagesFiles" multiple accept="image/*" class="file-input">
+            <small>Você pode selecionar várias fotos segurando Ctrl (PC) ou selecionando várias no celular.</small>
+            <!-- Guardamos as URLs antigas se for edição -->
+            <input type="hidden" id="pImagesUrlsOld">
         </div>
+
         <div class="form-group">
-            <label>Link de Afiliado</label>
-            <input type="text" id="pLink" placeholder="https://shopee.com.br/...">
+            <label>Link de Afiliado Final</label>
+            <input type="text" id="pLink" placeholder="https://...">
         </div>
         
-        <button id="submitBtn" class="btn-main" onclick="window.saveProduct()">Salvar no Banco</button>
+        <button id="submitBtn" class="btn-main" onclick="window.saveProduct()">Publicar no Site</button>
         <button id="cancelBtn" class="btn-cancel" onclick="window.cancelEdit()" style="display: none;">Cancelar Edição</button>
     </div>
 
+    <!-- Lista -->
     <div class="panel">
-        <h2>Produtos Ativos</h2>
+        <h2>Inventário</h2>
         <ul class="product-list" id="adminList">
             <li style="text-align: center; color: #666; padding: 20px;">Carregando...</li>
         </ul>
     </div>
 </div>
 
-<div class="modal-overlay" id="deleteModal">
-    <div class="modal">
-        <h3>Remover Produto?</h3>
-        <p style="color: #8e8e93; font-size: 0.85rem; margin-top: 5px;">O produto sairá do ar imediatamente.</p>
-        <div class="modal-btns">
-            <button class="btn-dismiss" onclick="window.closeModal()">Cancelar</button>
-            <button class="btn-confirm" id="confirmDeleteBtn">Apagar</button>
-        </div>
-    </div>
-</div>
-
 <div class="toast-container" id="toastContainer"></div>
-
 <script type="module" src="js/admin.js"></script>
 </body>
 </html>

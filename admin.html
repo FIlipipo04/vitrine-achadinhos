@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Achadinhos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+<div class="admin-container">
+    <div style="grid-column: 1 / -1;">
+        <div class="header-nav">
+            <h1>Controle da Vitrine</h1>
+            <a href="index.html" target="_blank" class="btn-view">Visualizar Vitrine ↗</a>
+        </div>
+    </div>
+
+    <div class="dashboard">
+        <div class="stat-card">
+            <span>Total de Produtos</span>
+            <h3 id="countTotal">0</h3>
+        </div>
+        <div class="stat-card">
+            <span>Servidor Banco</span>
+            <h3 style="color: var(--success); font-size: 1.1rem; margin-top: 5px;">Online 🟢</h3>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2 id="formTitle">Cadastrar Novo Produto</h2>
+        <div class="form-group">
+            <label>Código do Produto (ID)</label>
+            <input type="text" id="pId" placeholder="Ex: LOOK01">
+        </div>
+        
+        <div class="form-group">
+            <label>Categoria</label>
+            <select id="pCat">
+                <option value="Roupas">Roupas</option>
+                <option value="Sapatos">Sapatos</option>
+                <option value="Acessórios">Acessórios</option>
+                <option value="Casa">Casa</option>
+                <option value="Outros">Outros</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Links das Imagens</label>
+            <textarea id="pImages" rows="3" placeholder="Cole os links separados por vírgula..."></textarea>
+            <small>Adicione mais de uma imagem para ativar o carrossel.</small>
+        </div>
+        <div class="form-group">
+            <label>Link de Afiliado</label>
+            <input type="text" id="pLink" placeholder="https://shopee.com.br/...">
+        </div>
+        
+        <button id="submitBtn" class="btn-main" onclick="window.saveProduct()">Salvar no Banco</button>
+        <button id="cancelBtn" class="btn-cancel" onclick="window.cancelEdit()" style="display: none;">Cancelar Edição</button>
+    </div>
+
+    <div class="panel">
+        <h2>Produtos Ativos</h2>
+        <ul class="product-list" id="adminList">
+            <li style="text-align: center; color: #666; padding: 20px;">Carregando...</li>
+        </ul>
+    </div>
+</div>
+
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+        <h3>Remover Produto?</h3>
+        <p style="color: #8e8e93; font-size: 0.85rem; margin-top: 5px;">O produto sairá do ar imediatamente.</p>
+        <div class="modal-btns">
+            <button class="btn-dismiss" onclick="window.closeModal()">Cancelar</button>
+            <button class="btn-confirm" id="confirmDeleteBtn">Apagar</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="module" src="js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Achadinhos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- ESTILOS ADMIN PREMIUM --- */
+        :root { --bg: #0f0f11; --surface: #1c1c1f; --primary: #dcb37b; --text: #ffffff; --danger: #ff4757; --success: #2ed573; --border: #333; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); padding: 20px; font-size: 14px; }
+        
+        .admin-container { max-width: 900px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 768px) { .admin-container { grid-template-columns: 1fr; } }
+        
+        /* Header e Dashboard */
+        .header-nav { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 10px; }
+        .header-nav h1 { color: var(--primary); font-size: 1.5rem; }
+        .btn-view { background: rgba(220, 179, 123, 0.1); border: 1px solid var(--primary); color: var(--primary); padding: 8px 16px; text-decoration: none; border-radius: 8px; font-weight: 600; transition: 0.2s; }
+        .btn-view:hover { background: var(--primary); color: var(--bg); }
+        
+        .dashboard { grid-column: 1 / -1; display: flex; gap: 15px; margin-bottom: 10px; }
+        .stat-card { background: var(--surface); flex: 1; padding: 20px; border-radius: 12px; border: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; }
+        .stat-card span { color: #888; font-size: 0.9rem; margin-bottom: 5px; }
+        .stat-card h3 { color: var(--primary); font-size: 2rem; }
+
+        /* Paineis */
+        .panel { background: var(--surface); padding: 25px; border-radius: 12px; border: 1px solid var(--border); }
+        .panel h2 { color: var(--text); margin-bottom: 20px; font-size: 1.2rem; border-left: 4px solid var(--primary); padding-left: 10px; }
+        
+        /* Formulários */
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #bbb; }
+        input, textarea, select { width: 100%; padding: 12px; background: #121214; border: 1px solid var(--border); border-radius: 8px; color: white; outline: none; transition: 0.2s; }
+        input:focus, textarea:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(220, 179, 123, 0.2); }
+        small { color: #666; font-size: 0.75rem; display: block; margin-top: 6px; }
+        
+        .btn-main { width: 100%; padding: 14px; background: var(--primary); color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; transition: 0.2s; text-transform: uppercase; font-size: 0.9rem; margin-top: 10px; }
+        .btn-main:hover { background: #e0bc87; transform: translateY(-2px); }
+        .btn-cancel { width: 100%; padding: 12px; background: transparent; border: 1px solid #555; color: #ccc; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+        
+        /* Lista */
+        .product-list { list-style: none; display: flex; flex-direction: column; gap: 10px; max-height: 600px; overflow-y: auto; padding-right: 5px; }
+        .product-list::-webkit-scrollbar { width: 6px; }
+        .product-list::-webkit-scrollbar-thumb { background: #444; border-radius: 4px; }
+        .product-item { background: #121214; border: 1px solid var(--border); padding: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .item-info strong { color: var(--primary); font-size: 1.1rem; }
+        .item-badge { background: #2a2a30; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; color: #aaa; margin-left: 8px; }
+        
+        .action-buttons { display: flex; gap: 8px; }
+        .btn-icon { background: #2a2a30; border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; }
+        .btn-icon:hover { background: #444; }
+        .btn-icon.del:hover { background: var(--danger); }
+
+        /* Modal Customizado */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); display: none; justify-content: center; align-items: center; z-index: 100; }
+        .modal { background: var(--surface); padding: 30px; border-radius: 12px; border: 1px solid var(--border); width: 90%; max-width: 400px; text-align: center; }
+        .modal h3 { margin-bottom: 15px; color: var(--text); }
+        .modal-btns { display: flex; gap: 10px; margin-top: 25px; }
+        .modal-btns button { flex: 1; padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; }
+        .btn-confirm { background: var(--danger); color: white; }
+        .btn-dismiss { background: #333; color: white; }
+
+        /* Toasts */
+        .toast-container { position: fixed; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
+        .toast { padding: 12px 24px; border-radius: 8px; font-weight: 600; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.5); animation: slideIn 0.3s forwards; }
+        .toast.success { background: var(--success); color: #000; }
+        .toast.error { background: var(--danger); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="admin-container">
+    <div class="header-nav">
+        <h1>Admin Control</h1>
+        <a href="index.html" target="_blank" class="btn-view">Visualizar Vitrine ↗</a>
+    </div>
+
+    <div class="dashboard">
+        <div class="stat-card">
+            <span>Total de Cadastros</span>
+            <h3 id="countTotal">0</h3>
+        </div>
+        <div class="stat-card">
+            <span>Status do Banco</span>
+            <h3 style="color: var(--success); font-size: 1.2rem; margin-top: 10px;">Online 🟢</h3>
+        </div>
+    </div>
+
+    <div class="panel">
+        <h2 id="formTitle">Cadastrar Novo Produto</h2>
+        <div class="form-group">
+            <label>Código do Produto (ID)</label>
+            <input type="text" id="pId" placeholder="Ex: LOOK01">
+        </div>
+        
+        <div class="form-group">
+            <label>Categoria</label>
+            <select id="pCat">
+                <option value="Roupas">Roupas</option>
+                <option value="Sapatos">Sapatos</option>
+                <option value="Acessórios">Acessórios</option>
+                <option value="Casa">Casa</option>
+                <option value="Outros">Outros</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Links das Imagens (Carrossel)</label>
+            <textarea id="pImages" rows="3" placeholder="Cole os links separados por vírgula..."></textarea>
+            <small>Dica: Use a vírgula para adicionar mais de uma foto ao mesmo produto.</small>
+        </div>
+        <div class="form-group">
+            <label>Link de Afiliado Final</label>
+            <input type="text" id="pLink" placeholder="https://afiliado...">
+        </div>
+        
+        <button id="submitBtn" class="btn-main" onclick="window.saveProduct()">Salvar no Banco</button>
+        <button id="cancelBtn" class="btn-cancel" onclick="window.cancelEdit()" style="display: none;">Cancelar Edição</button>
+    </div>
+
+    <div class="panel">
+        <h2>Inventário</h2>
+        <ul class="product-list" id="adminList">
+            <li style="text-align: center; color: #666; padding: 20px;">Conectando ao Firebase...</li>
+        </ul>
+    </div>
+</div>
+
+<div class="modal-overlay" id="deleteModal">
+    <div class="modal">
+        <h3>⚠️ Tem certeza?</h3>
+        <p style="color: #aaa; font-size: 0.9rem;">Esta ação removerá o produto da vitrine instantaneamente.</p>
+        <div class="modal-btns">
+            <button class="btn-dismiss" onclick="window.closeModal()">Cancelar</button>
+            <button class="btn-confirm" id="confirmDeleteBtn">Sim, Apagar</button>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+
+    // --- CHAVES DO FIREBASE AQUI ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyB0sfEpbNf7t6ZkYX_TFPLgNA559D5pssM",
+        authDomain: "conta-ttk.firebaseapp.com",
+        projectId: "conta-ttk",
+        storageBucket: "conta-ttk.firebasestorage.app",
+        messagingSenderId: "418211942552",
+        appId: "1:418211942552:web:99b86646d1f1195d7180ed",
+        measurementId: "G-M45YMVGF10"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const produtosRef = collection(db, "produtos");
+    const q = query(produtosRef, orderBy("dataCriacao", "desc"));
+
+    let products = [];
+    let editingId = null;
+    let deletingId = null;
+
+    // Toast System UI
+    window.showToast = (msg, type = 'success') => {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerText = msg;
+        container.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+    };
+
+    // Firebase Listener
+    onSnapshot(q, (snapshot) => {
+        products = [];
+        snapshot.forEach((doc) => {
+            products.push({ ...doc.data(), uid: doc.id });
+        });
+        document.getElementById('countTotal').innerText = products.length; // Atualiza o Dashboard
+        renderAdminList();
+    });
+
+    // Função Salvar/Atualizar
+    window.saveProduct = async () => {
+        const id = document.getElementById('pId').value;
+        const categoria = document.getElementById('pCat').value;
+        const images = document.getElementById('pImages').value;
+        const link = document.getElementById('pLink').value;
+
+        if(!id || !images || !link) { 
+            window.showToast('Preencha todos os campos obrigatórios.', 'error');
+            return; 
+        }
+
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = "Processando...";
+        btn.style.opacity = "0.7";
+
+        try {
+            if (editingId) {
+                await updateDoc(doc(db, "produtos", editingId), { id, categoria, images, link });
+                window.showToast('Produto atualizado com sucesso!');
+                window.cancelEdit();
+            } else {
+                await addDoc(produtosRef, { id, categoria, images, link, dataCriacao: serverTimestamp() });
+                window.showToast('Produto cadastrado com sucesso!');
+                window.clearForm();
+            }
+        } catch (error) {
+            window.showToast('Erro de conexão: ' + error.message, 'error');
+        }
+        btn.innerText = "Salvar no Banco";
+        btn.style.opacity = "1";
+    };
+
+    // Modal UI Handlers
+    window.openDeleteModal = (uid) => {
+        deletingId = uid;
+        document.getElementById('deleteModal').style.display = 'flex';
+    };
+    
+    window.closeModal = () => {
+        deletingId = null;
+        document.getElementById('deleteModal').style.display = 'none';
+    };
+
+    document.getElementById('confirmDeleteBtn').addEventListener('click', async () => {
+        if(deletingId) {
+            try {
+                await deleteDoc(doc(db, "produtos", deletingId));
+                window.showToast('Produto apagado.', 'success');
+            } catch(e) {
+                window.showToast('Erro ao apagar.', 'error');
+            }
+            window.closeModal();
+        }
+    });
+
+    window.editProduct = (uid) => {
+        const p = products.find(p => p.uid === uid);
+        if(!p) return;
+        document.getElementById('pId').value = p.id;
+        document.getElementById('pCat').value = p.categoria || 'Roupas';
+        document.getElementById('pImages').value = p.images;
+        document.getElementById('pLink').value = p.link;
+
+        editingId = uid;
+        document.getElementById('formTitle').innerText = "Editando Produto...";
+        document.getElementById('submitBtn').innerText = "Atualizar Produto";
+        document.getElementById('cancelBtn').style.display = "block";
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.cancelEdit = () => {
+        editingId = null;
+        document.getElementById('formTitle').innerText = "Cadastrar Novo Produto";
+        document.getElementById('submitBtn').innerText = "Salvar no Banco";
+        document.getElementById('cancelBtn').style.display = "none";
+        window.clearForm();
+    };
+
+    window.clearForm = () => {
+        document.getElementById('pId').value = '';
+        document.getElementById('pImages').value = '';
+        document.getElementById('pLink').value = '';
+        document.getElementById('pCat').value = 'Roupas';
+    };
+
+    function renderAdminList() {
+        const list = document.getElementById('adminList');
+        list.innerHTML = '';
+        if(products.length === 0) { list.innerHTML = '<li style="text-align: center; color: #555; padding: 20px;">Nenhum produto cadastrado.</li>'; return; }
+
+        products.forEach((p) => {
+            const li = document.createElement('li');
+            li.className = 'product-item';
+            const cat = p.categoria || 'Geral';
+            li.innerHTML = `
+                <div class="item-info">
+                    <strong>${p.id.toUpperCase()}</strong> <span class="item-badge">${cat}</span>
+                    <br><small style="color:#888;">${p.images.split(',').length} imagem(ns)</small>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn-icon" onclick="window.editProduct('${p.uid}')" title="Editar">✏️</button>
+                    <button class="btn-icon del" onclick="window.openDeleteModal('${p.uid}')" title="Apagar">🗑️</button>
+                </div>
+            `;
+            list.appendChild(li);
+        });
+    }
+</script>
+
+</body>
+</html>

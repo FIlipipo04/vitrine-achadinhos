@@ -17,7 +17,19 @@
         </div>
     </div>
 
-    <!-- Formulário com LINK DA FOTO -->
+    <!-- 1. GERENCIAR CATEGORIAS (O NOVO PAINEL!) -->
+    <div class="panel">
+        <h2>Gerenciar Categorias</h2>
+        <div class="form-group" style="display: flex; gap: 10px; margin-bottom: 15px;">
+            <input type="text" id="catNome" placeholder="Ex: Moda Praia">
+            <button class="btn-main" onclick="window.addCategory()" style="width: 120px;">Adicionar</button>
+        </div>
+        <ul class="product-list" id="categoryList">
+            <li style="text-align: center; color: #666; padding: 10px;">Carregando...</li>
+        </ul>
+    </div>
+
+    <!-- 2. FORMULÁRIO DE PRODUTO -->
     <div class="panel">
         <h2 id="formTitle">Nova Peça</h2>
         
@@ -32,16 +44,12 @@
         </div>
         
         <div class="form-group">
-            <label>Categoria</label>
+            <label>Categoria (Vem do banco de dados agora)</label>
             <select id="pCat">
-                <option value="Dresses">Dresses (Vestidos)</option>
-                <option value="Tops">Tops (Blusas)</option>
-                <option value="Bottoms">Bottoms (Calças/Saias)</option>
-                <option value="Accessories">Accessories (Acessórios)</option>
+                <!-- As opções vão aparecer aqui sozinhas -->
             </select>
         </div>
 
-        <!-- CAMPO DE LINK AO INVÉS DE ARQUIVO -->
         <div class="form-group">
             <label>Link da Foto (ImgBB, Pinterest, Shein)</label>
             <input type="text" id="pImagesUrls" placeholder="https://...">
@@ -57,8 +65,8 @@
         <button id="cancelBtn" class="btn-cancel" onclick="window.cancelEdit()" style="display: none;">Cancelar Edição</button>
     </div>
 
-    <!-- Lista de Produtos -->
-    <div class="panel">
+    <!-- 3. LISTA DE PRODUTOS -->
+    <div class="panel" style="grid-column: 1 / -1;">
         <h2>Inventário</h2>
         <ul class="product-list" id="adminList">
             <li style="text-align: center; color: #666; padding: 20px;">Carregando...</li>

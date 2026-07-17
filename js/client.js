@@ -13,13 +13,29 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const q = query(collection(db, "produtos"), orderBy("dataCriacao", "desc"));
 
 let allProducts = [];
 let currentCategory = 'Tudo';
 let currentSearch = '';
 
-onSnapshot(q, (snapshot) => {
+// Puxar as categorias Dinâmicas do Banco
+onSnapshot(query(collection(db, "categorias"), orderBy("nome", "asc")), (snapshot) => {
+    const filterContainer = document.getElementById('categoryFilters');
+    // Reinicia deixando só o botão Tudo
+    filterContainer.innerHTML = '<button class="cat-btn active" onclick="filterByCategory(\'Tudo\', this)">Tudo</button>';
+    
+    snapshot.forEach((docSnap) => {
+        const catNome = docSnap.data().nome;
+        const btn = document.createElement('button');
+        btn.className = 'cat-btn';
+        btn.innerText = catNome;
+        btn.onclick = function() { window.filterByCategory(catNome, this); };
+        filterContainer.appendChild(btn);
+    });
+});
+
+// Puxar os produtos
+onSnapshot(query(collection(db, "produtos"), orderBy("dataCriacao", "desc")), (snapshot) => {
     allProducts = [];
     snapshot.forEach((doc) => {
         allProducts.push({ ...doc.data(), uid: doc.id });
@@ -75,9 +91,7 @@ function renderFeed(productsToRender) {
     }
 
     productsToRender.forEach(product => {
-        // Separa os links por vírgula para criar o carrossel
         let images = typeof product.images === 'string' ? product.images.split(',').map(img => img.trim()) : product.images;
-
         const nomeProduto = product.nome || 'Peça Exclusiva';
         let carouselHTML = '';
         
@@ -85,7 +99,6 @@ function renderFeed(productsToRender) {
             carouselHTML += `<div class="carousel-item"><img src="${img}" alt="${nomeProduto}" loading="lazy"></div>`;
         });
 
-        // HTML do card robusto/vidro
         const card = `
             <div class="glass-card">
                 <div class="carousel-wrapper">

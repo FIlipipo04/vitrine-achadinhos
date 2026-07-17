@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato - Dress Mode</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/client.css">
+</head>
+<body>
+
+<div class="app-container">
+    <div class="glass-header sub-header">
+        <a href="index.html" class="btn-back">← Voltar</a>
+        <div class="brand-title">
+            <h2>ATENDIMENTO VIP</h2>
+            <h1>Fale Conosco</h1>
+        </div>
+    </div>
+
+    <div class="page-content">
+        <div class="glass-panel">
+            <p>Dúvidas sobre alguma peça, tamanho ou parceria? Envie sua mensagem e nossa equipe retornará em até 24 horas.</p>
+            
+            <form class="contact-form" onsubmit="event.preventDefault(); alert('Mensagem enviada com sucesso! (Isso é um teste visual)');">
+                <input type="text" class="contact-input" placeholder="Seu Nome Completo" required>
+                <input type="email" class="contact-input" placeholder="Seu E-mail" required>
+                <textarea class="contact-input" rows="4" placeholder="Como podemos te ajudar?" required></textarea>
+                <button type="submit" class="btn-buy" style="margin-top: 10px;">ENVIAR MENSAGEM</button>
+            </form>
+        </div>
+    </div>
+
+    <footer class="premium-footer">
+        <div class="footer-bottom">
+            <p>&copy; 2026 Dress Mode. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+</div>
+
+</body>
+</html>

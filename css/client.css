@@ -169,3 +169,33 @@ body {
     font-size: 0.75rem;
     color: rgba(189, 174, 163, 0.5);
 }
+/* =========================================
+   ESTILOS DAS SUB-PÁGINAS (SOBRE, CONTATO)
+   ========================================= */
+.sub-header { padding-bottom: 20px; position: relative; }
+.btn-back { 
+    position: absolute; left: 20px; top: 25px; 
+    color: var(--text-muted); text-decoration: none; 
+    font-size: 0.85rem; font-weight: 600; text-transform: uppercase;
+}
+.btn-back:hover { color: var(--text-primary); }
+
+.page-content { padding: 30px 20px; min-height: 50vh; }
+
+.glass-panel { 
+    background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); 
+    border: 1px solid var(--glass-border); border-radius: 20px; 
+    padding: 25px; margin-bottom: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.4); 
+}
+.glass-panel h3 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--text-primary); margin-bottom: 15px; }
+.glass-panel p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 15px; }
+
+/* Formulário de Contato Premium */
+.contact-form { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+.contact-input { 
+    width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); 
+    border-radius: 12px; padding: 14px 15px; color: var(--text-primary); 
+    font-family: 'Montserrat', sans-serif; outline: none; transition: 0.3s;
+}
+.contact-input::placeholder { color: rgba(189, 174, 163, 0.4); }
+.contact-input:focus { border-color: var(--text-primary); background: rgba(0,0,0,0.5); }

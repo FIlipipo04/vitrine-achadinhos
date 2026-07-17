@@ -18,9 +18,9 @@
             <h1>Dress Mode</h1>
         </div>
 
-        <div class="search-box">
-            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            <input type="text" id="searchInput" placeholder="Buscar peça ou #ID...">
+        <div class="categories" id="categoryFilters">
+            <button class="cat-btn active" onclick="filterByCategory('Tudo', this)">Tudo</button>
+            <!-- As outras categorias serão inseridas aqui magicamente pelo Banco de Dados -->
         </div>
         
         <div class="categories" id="categoryFilters">

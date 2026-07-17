@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Atelier Control</title>
+    <style>
+        body { background: #1a0d0d; color: #f2e7dc; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-card { background: #2d1212; padding: 30px; border-radius: 20px; border: 1px solid rgba(242,231,220,0.1); width: 300px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #555; background: #1a0d0d; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 10px; background: #a33b3b; color: white; border: none; border-radius: 8px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>Acesso Administrativo</h2>
+        <input type="email" id="email" placeholder="Seu e-mail">
+        <input type="password" id="password" placeholder="Senha">
+        <button onclick="window.fazerLogin()">Entrar</button>
+        <p id="msg" style="color: #ff6b6b; font-size: 0.8rem;"></p>
+    </div>
+    <script type="module" src="js/login.js"></script>
+</body>
+</html>

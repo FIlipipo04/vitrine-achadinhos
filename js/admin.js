@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
 import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
 
-console.log("O script admin.js carregou!");
 const firebaseConfig = {
     apiKey: "AIzaSyB0sfEpbNf7t6ZkYX_TFPLgNA559D5pssM",
     authDomain: "conta-ttk.firebaseapp.com",
@@ -14,6 +14,16 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
+
+// Proteção da página: se não estiver logado, redireciona para o login
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        window.location.href = "login.html"; 
+    }
+});
+
+console.log("O script admin.js carregou!");
 
 const produtosRef = collection(db, "produtos");
 const categoriasRef = collection(db, "categorias");
@@ -44,11 +54,8 @@ onSnapshot(query(categoriasRef, orderBy("nome", "asc")), (snapshot) => {
     snapshot.forEach((docSnap) => {
         const data = docSnap.data();
         const uid = docSnap.id;
-        
-        // Proteção para o nome não quebrar aspas do HTML
         const safeName = data.nome.replace(/'/g, "\\'");
         
-        // 1. Renderiza Checkbox
         const div = document.createElement('div');
         div.innerHTML = `
             <label style="color: white; cursor: pointer; display: flex; align-items: center; gap: 5px; margin-bottom: 5px;">
@@ -57,7 +64,6 @@ onSnapshot(query(categoriasRef, orderBy("nome", "asc")), (snapshot) => {
         `;
         containerCategorias.appendChild(div);
 
-        // 2. Renderiza Botões com onclick direto (testado e garantido)
         const li = document.createElement('li');
         li.className = 'product-item';
         li.innerHTML = `

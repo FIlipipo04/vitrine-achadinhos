@@ -96,7 +96,14 @@ function renderFeed(productsToRender) {
     }
 
     productsToRender.forEach(product => {
-        let images = typeof product.images === 'string' ? product.images.split(',').map(img => img.trim()) : (product.images || []);
+        // Pega as imagens e aplica o filtro escudo para garantir que não vai quebrar
+        let imagensOriginais = typeof product.images === 'string' ? product.images.split(',') : (product.images || []);
+        let images = imagensOriginais.map(img => {
+            let clean = typeof img === 'string' ? img.trim() : '';
+            const match = clean.match(/src=["'](.*?)["']/);
+            return match ? match[1] : clean;
+        }).filter(img => img !== "");
+
         const nomeProduto = product.nome || 'Peça Exclusiva';
         let carouselHTML = '';
         images.forEach((img) => {
@@ -109,7 +116,6 @@ function renderFeed(productsToRender) {
             <button class="nav-btn next" onclick="window.scrollCarousel('carousel-${product.uid}', 1)">❯</button>
         ` : '';
 
-        // --- AQUI PEGAMOS AS CATEGORIAS PARA EXIBIR ---
         const catsTexto = Array.isArray(product.categorias) ? product.categorias.join(', ') : (product.categoria || '');
         const catsHTML = catsTexto ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; font-weight: 500;">📁 ${catsTexto}</div>` : '';
 
@@ -125,7 +131,7 @@ function renderFeed(productsToRender) {
                     <div class="card-text">
                         <h3>${nomeProduto}</h3>
                         <span>#${product.id ? product.id.toUpperCase() : ''}</span>
-                        ${catsHTML} <!-- CATEGORIAS INSERIDAS AQUI -->
+                        ${catsHTML}
                     </div>
                     <button class="copy-btn" onclick="window.copyToClipboard('#${product.id ? product.id.toUpperCase() : ''}')">Copiar</button>
                 </div>
@@ -155,19 +161,18 @@ window.updateArrows = (el) => {
     if (prevBtn) prevBtn.disabled = (el.scrollLeft <= 0);
     if (nextBtn) nextBtn.disabled = (el.scrollLeft + el.clientWidth >= el.scrollWidth - 1);
 };
+
 // --- EFEITO DO CABEÇALHO DINÂMICO (COM ANTI-TREMOR) ---
-let isHeaderScrolled = false; // Guarda o estado atual do cabeçalho
+let isHeaderScrolled = false; 
 
 window.addEventListener('scroll', () => {
     const header = document.querySelector('.glass-header');
     if (!header) return;
 
-    // Se descer mais de 80px, ele encolhe
     if (window.scrollY > 80 && !isHeaderScrolled) {
         header.classList.add('scrolled');
         isHeaderScrolled = true;
     } 
-    // Só volta a crescer se subir quase até o topo (menos de 20px)
     else if (window.scrollY < 20 && isHeaderScrolled) {
         header.classList.remove('scrolled');
         isHeaderScrolled = false;

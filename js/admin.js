@@ -89,7 +89,13 @@ window.saveProduct = async () => {
     const imagensRaw = document.getElementById('pImagesUrls').value;
 
     const cats = Array.from(document.querySelectorAll('input[name="cat"]:checked')).map(cb => cb.value);
-    const imagesArray = imagensRaw.split(',').map(s => s.trim()).filter(s => s !== "");
+    
+    // Filtro inteligente: extrai apenas a URL da imagem caso venha o HTML completo do ImgBB
+    const imagesArray = imagensRaw.split(',').map(s => {
+        let clean = s.trim();
+        const match = clean.match(/src=["'](.*?)["']/);
+        return match ? match[1] : clean;
+    }).filter(s => s !== "");
 
     if(!nome || !id || !link || cats.length === 0 || imagesArray.length === 0) { 
         window.showToast('Preencha Nome, ID, Link, Fotos e marque a Categoria.', 'error'); return; 
@@ -134,6 +140,21 @@ window.cancelEdit = () => {
     document.getElementById('submitBtn').innerText = "Publicar no Site";
     document.getElementById('cancelBtn').style.display = "none";
     window.clearForm();
+};
+
+window.deleteProduct = async (uid) => {
+    if(confirm('Tem certeza que deseja apagar esta peça definitivamente?')) { 
+        try {
+            await deleteDoc(doc(db, "produtos", uid)); 
+            window.showToast('Peça apagada com sucesso!'); 
+            // Se estiver apagando a mesma peça que está no formulário de edição, limpa o formulário
+            if (editingId === uid) {
+                window.cancelEdit();
+            }
+        } catch (e) {
+            window.showToast('Erro ao apagar: ' + e.message, 'error');
+        }
+    }
 };
 
 window.clearForm = () => {
@@ -192,7 +213,6 @@ window.updatePreview = function() {
     const imageInput = document.getElementById('pImagesUrls')?.value.trim() || '';
     const previewArea = document.getElementById('previewCardArea');
 
-    // MÁGICA DAS CATEGORIAS NO PREVIEW
     const catsArray = Array.from(document.querySelectorAll('input[name="cat"]:checked')).map(cb => cb.value);
     const catsTexto = catsArray.length > 0 ? catsArray.join(', ') : 'Sem categoria';
     const catsHTML = `<div style="font-size: 0.75rem; color: #bdaea3; margin-top: 6px; font-weight: 500;">📁 ${catsTexto}</div>`;
@@ -201,7 +221,13 @@ window.updatePreview = function() {
 
     let carouselHTML = '';
     let arrowsHTML = '';
-    const imagesArray = imageInput.split(',').map(s => s.trim()).filter(s => s !== "");
+    
+    // Pesca apenas o link limpo no Preview também
+    const imagesArray = imageInput.split(',').map(s => {
+        let clean = s.trim();
+        const match = clean.match(/src=["'](.*?)["']/);
+        return match ? match[1] : clean;
+    }).filter(s => s !== "");
 
     if (imagesArray.length === 0) {
         previewArea.innerHTML = `
@@ -258,5 +284,4 @@ inputs.forEach(id => {
         element.addEventListener('input', updatePreview);
     }
 });
-// Renderiza o painel vazio assim que o arquivo é lido
 updatePreview();

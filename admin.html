@@ -6,7 +6,7 @@
     <title>Dress Mode - Atelier (Admin)</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/admin.css">
-    <link rel="stylesheet" href="css/client.css"> <!-- Importamos o client.css para pegar o estilo do carrossel no preview -->
+    <link rel="stylesheet" href="css/client.css"> 
     <style>
         /* Força a mãozinha (pointer) em todos os botões do painel Admin */
         button, input[type="checkbox"], .btn-icon, .btn-main, .btn-view {
@@ -16,7 +16,7 @@
             z-index: 50;
         }
 
-        /* Bloqueia os botões 'Copiar' e 'EU QUERO', mas EXCLUI as setas (.nav-btn) do bloqueio */
+        /* Bloqueia os botões 'Copiar' e 'EU QUERO' no preview, mas EXCLUI as setas (.nav-btn) do bloqueio */
         #previewCardArea button:not(.nav-btn) {
             cursor: not-allowed !important;
             pointer-events: none !important;
@@ -27,18 +27,25 @@
         #toastContainer { 
             pointer-events: none !important; 
         }
-    </style>
-    </style>
-    <style>
+
         /* Ajuste fino para o admin não conflitar com o client.css */
-        body { background: var(--bg-gradient, #1e0a0a); display: block; }
+        body { background: var(--bg-gradient, #1e0a0a); display: block; margin: 0; }
         .admin-container { padding: 20px; max-width: 1200px; margin: auto; }
-        .preview-wrapper { pointer-events: auto; } /* Permite clicar no preview */
+        .preview-wrapper { pointer-events: auto; }
     </style>
 </head>
 <body>
 
 <div class="admin-container">
+    <!-- Resumo de Performance -->
+    <div id="dashboardResumo" style="background: #2d1212; padding: 20px; border-radius: 20px; margin-bottom: 25px; border: 1px solid rgba(242, 231, 220, 0.1);">
+        <h3 style="color: #f2e7dc; margin-top: 0;">📊 Resumo de Performance</h3>
+        <div style="display: flex; gap: 20px; color: #bdaea3;">
+            <div><strong>Total de Peças:</strong> <span id="totalPecas" style="color: white;">0</span></div>
+            <div><strong>Peça Top Click:</strong> <span id="topPeca" style="color: white;">-</span></div>
+        </div>
+    </div>
+
     <div style="grid-column: 1 / -1; margin-bottom: 20px;">
         <div class="header-nav" style="display: flex; justify-content: space-between; align-items: center;">
             <h1 style="color: white; font-family: 'Playfair Display', serif;">Atelier Control</h1>
@@ -46,22 +53,33 @@
         </div>
     </div>
 
-    <!-- PAINEL 1: LISTAS (CATEGORIAS E PRODUTOS CADASTRADOS) -->
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-bottom: 25px;">
-        
-        <!-- Categorias -->
-        <div class="panel" style="background: rgba(45, 18, 18, 0.6); padding: 20px; border-radius: 12px; border: 1px solid #444;">
-            <h2 style="color: white; margin-bottom: 15px;">Gerenciar Categorias</h2>
-            <div class="form-group" style="display: flex; gap: 10px; margin-bottom: 15px;">
-                <input type="text" id="catNome" placeholder="Ex: Moda Praia" style="flex: 1; padding: 10px; border-radius: 8px;">
-                <button onclick="window.addCategory()" style="padding: 10px 20px; background: #e3d5ca; border: none; font-weight: bold; cursor: pointer; border-radius: 8px;">Adicionar</button>
-            </div>
-            <ul class="product-list" id="categoryList" style="list-style: none; padding: 0; margin: 0; color: white;">
-                <li style="text-align: center; color: #666; padding: 10px;">Carregando...</li>
-            </ul>
-        </div>
+<!-- PAINEL DE CONTROLE DE PROMOÇÃO -->
+<div class="panel" style="background: rgba(45, 18, 18, 0.6); padding: 20px; border-radius: 12px; border: 1px solid #444; margin-bottom: 25px;">
+    <h2 style="color: white; margin-bottom: 15px;">⚡ Banner de Promoção (Topo do Site)</h2>
+    <div style="display: flex; gap: 15px; margin-bottom: 15px;">
+        <input type="text" id="promoTextoInput" placeholder="Ex: 🔥 FRETE GRÁTIS HOJE" style="flex: 2; padding: 12px; border-radius: 8px; border: 1px solid #555; background: #222; color: white;">
+        <input type="text" id="promoLinkInput" placeholder="Link da oferta (ex: https://...)" style="flex: 2; padding: 12px; border-radius: 8px; border: 1px solid #555; background: #222; color: white;">
+    </div>
+    <div style="display: flex; gap: 10px;">
+        <button onclick="window.atualizarPromo(true)" style="background: #a33b3b; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; flex: 1; cursor: pointer;">LIGAR PROMOÇÃO</button>
+        <button onclick="window.atualizarPromo(false)" style="background: transparent; color: #e3d5ca; border: 1px solid #e3d5ca; padding: 12px; border-radius: 8px; font-weight: bold; flex: 1; cursor: pointer;">DESLIGAR BOTAO</button>
+    </div>
+</div>
 
-        <!-- Produtos Cadastrados (AQUI ESTÁ A LISTA QUE HAVIA SUMIDO) -->
+    <!-- PAINEL 1: LISTAS -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-bottom: 25px;">
+        <!-- Categorias -->
+        <div class="panel" style="background: rgba(45, 18, 18, 0.6); padding: 20px; border-radius: 12px; border: 1px solid #444; margin-top: 20px;">
+    <h2 style="color: white;">Banner de Promoção</h2>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+        <input type="text" id="promoTextoInput" placeholder="Texto do banner" style="padding: 10px; border-radius: 8px;">
+        <input type="text" id="promoLinkInput" placeholder="Link do banner" style="padding: 10px; border-radius: 8px;">
+        <button onclick="window.atualizarPromo(true)" style="background: #a33b3b; color: white; padding: 10px; border: none; border-radius: 8px;">LIGAR PROMOÇÃO</button>
+        <button onclick="window.atualizarPromo(false)" style="background: #444; color: white; padding: 10px; border: none; border-radius: 8px;">DESLIGAR</button>
+    </div>
+</div>
+
+        <!-- Produtos -->
         <div class="panel" style="background: rgba(45, 18, 18, 0.6); padding: 20px; border-radius: 12px; border: 1px solid #444;">
             <h2 style="color: white; margin-bottom: 15px;">Peças Cadastradas</h2>
             <ul class="product-list" id="adminList" style="list-style: none; padding: 0; margin: 0; max-height: 300px; overflow-y: auto;">
@@ -70,59 +88,45 @@
         </div>
     </div>
 
-    <!-- PAINEL 2: FORMULÁRIO + PRÉ-VISUALIZAÇÃO (LADO A LADO) -->
+    <!-- PAINEL 2: FORMULÁRIO + PRÉ-VISUALIZAÇÃO -->
     <div class="panel" style="background: rgba(45, 18, 18, 0.6); padding: 30px; border-radius: 12px; border: 1px solid #444; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 40px;">
         
-        <!-- Lado Esquerdo: Formulário de Cadastro -->
         <div>
             <h2 id="formTitle" style="margin-bottom: 20px; color: white;">Nova Peça</h2>
-            
             <div class="form-group" style="margin-bottom: 15px;">
                 <label style="color: #bdaea3; display: block; margin-bottom: 5px;">Nome da Peça</label>
                 <input type="text" id="pNome" placeholder="Ex: Vestido Maison Rouge" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #555; background: #222; color: white;">
             </div>
-
             <div class="form-group" style="margin-bottom: 15px;">
                 <label style="color: #bdaea3; display: block; margin-bottom: 5px;">ID (Código TikTok)</label>
                 <input type="text" id="pId" placeholder="Ex: LOOK01" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #555; background: #222; color: white;">
             </div>
-            
             <div class="form-group" style="margin-bottom: 15px;">
                 <label style="color: #bdaea3; display: block; margin-bottom: 5px;">Categorias</label>
-                <div id="pCat" style="display: flex; flex-wrap: wrap; gap: 8px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px solid #444; max-height: 150px; overflow-y: auto;">
-                    <!-- As opções vão aparecer aqui sozinhas -->
-                </div>
+                <div id="pCat" style="display: flex; flex-wrap: wrap; gap: 8px; background: rgba(0,0,0,0.2); padding: 12px; border-radius: 8px; border: 1px solid #444; max-height: 150px; overflow-y: auto;"></div>
             </div>
-
             <div class="form-group" style="margin-bottom: 15px;">
                 <label style="color: #bdaea3; display: block; margin-bottom: 5px;">Link da Foto</label>
-                <input type="text" id="pImagesUrls" placeholder="https://..., https://..." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #555; background: #222; color: white;">
-                <small style="color: #bdaea3; display: block; margin-top: 4px;">Para o carrossel, separe os links por vírgula.</small>
+                <input type="text" id="pImagesUrls" placeholder="https://..." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #555; background: #222; color: white;">
             </div>
-
             <div class="form-group" style="margin-bottom: 25px;">
                 <label style="color: #bdaea3; display: block; margin-bottom: 5px;">Link de Afiliado</label>
                 <input type="text" id="pLink" placeholder="https://..." style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #555; background: #222; color: white;">
             </div>
-            
             <div style="display: flex; gap: 10px;">
-                <button id="submitBtn" onclick="window.saveProduct()" style="flex: 1; padding: 12px; background: #e3d5ca; color: #1e0a0a; border: none; font-weight: bold; border-radius: 8px; cursor: pointer;">Publicar no Site</button>
+                <button id="submitBtn" onclick="window.saveProduct()" style="flex: 1; padding: 12px; background: #e3d5ca; color: #1e0a0a; border: none; font-weight: bold; cursor: pointer; border-radius: 8px;">Publicar no Site</button>
                 <button id="cancelBtn" onclick="window.cancelEdit()" style="display: none; flex: 1; padding: 12px; background: transparent; color: #e3d5ca; border: 1px solid #e3d5ca; font-weight: bold; border-radius: 8px; cursor: pointer;">Cancelar</button>
             </div>
         </div>
 
-        <!-- Lado Direito: Pré-visualização com Carrossel -->
-        <div style="border-left: 1px solid rgba(242, 231, 220, 0.1); padding-left: 30px; display: flex; flex-direction: column; justify-content: flex-start;" class="preview-wrapper">
+        <div style="border-left: 1px solid rgba(242, 231, 220, 0.1); padding-left: 30px; display: flex; flex-direction: column;" class="preview-wrapper">
             <h2 style="margin-bottom: 20px; color: #bdaea3;">Pré-visualização da Peça</h2>
-            
-            <!-- O Preview Card vazio aguardando injeção do JS -->
             <div id="previewCardArea" style="max-width: 350px; margin: 0 auto; width: 100%;">
                 <div style="background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; text-align: center; color: #bdaea3; border: 1px dashed #555;">
                     Comece a digitar para visualizar a peça aqui.
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 

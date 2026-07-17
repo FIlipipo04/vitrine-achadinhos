@@ -31,7 +31,7 @@ const categoriasRef = collection(db, "categorias");
 let products = [];
 let editingId = null;
 
-// --- FUNÇÕES GERAIS ---
+// --- FUNÇÕES GERAIS E PROMOÇÃO ---
 window.showToast = (msg, type = 'success') => {
     const container = document.getElementById('toastContainer');
     if (!container) return;
@@ -40,6 +40,21 @@ window.showToast = (msg, type = 'success') => {
     toast.innerText = msg;
     container.appendChild(toast);
     setTimeout(() => toast.remove(), 3500);
+};
+
+window.atualizarPromo = async (status) => {
+    const texto = document.getElementById('promoTextoInput').value;
+    const link = document.getElementById('promoLinkInput').value;
+    try {
+        await updateDoc(doc(db, "configuracoes", "promo"), {
+            ativo: status,
+            texto: texto || "🔥 APROVEITE NOSSA PROMOÇÃO",
+            link: link || "#"
+        });
+        window.showToast(status ? "Banner ativado no site!" : "Banner desligado!");
+    } catch (e) {
+        window.showToast("Erro ao atualizar: " + e.message, "error");
+    }
 };
 
 // --- SISTEMA DE CATEGORIAS ---
@@ -186,15 +201,30 @@ window.clearForm = () => {
 
 function renderAdminList() {
     const list = document.getElementById('adminList');
+    const totalPecasSpan = document.getElementById('totalPecas');
+    const topPecaSpan = document.getElementById('topPeca');
+    
     if(!list) return;
     list.innerHTML = '';
+    
+    // Calcula o total
+    totalPecasSpan.innerText = products.length;
+
+    // Encontra a peça mais clicada
+    let topPeca = products.reduce((prev, current) => {
+        return (prev.cliques || 0) > (current.cliques || 0) ? prev : current;
+    }, {nome: 'Nenhuma', cliques: 0});
+    
+    topPecaSpan.innerText = `${topPeca.nome} (${topPeca.cliques || 0} cliques)`;
+
+    // Renderiza a lista
     products.forEach((p) => {
         const li = document.createElement('li');
         li.className = 'product-item';
         li.innerHTML = `
             <div class="item-info">
                 <strong>${p.nome || 'Sem nome'}</strong> 
-                <span class="item-badge">ID: #${p.id ? p.id.toUpperCase() : ''}</span>
+                <span class="item-badge">ID: #${p.id ? p.id.toUpperCase() : ''} | 🔥 ${p.cliques || 0}</span>
             </div>
             <div class="action-buttons">
                 <button class="btn-icon" onclick="window.editProduct('${p.uid}')">✏️</button>
@@ -205,7 +235,6 @@ function renderAdminList() {
     });
 }
 
-// --- FUNÇÕES DE NAVEGAÇÃO DO CARROSSEL E PREVIEW ---
 window.scrollCarousel = (id, direction) => {
     const container = document.getElementById(id);
     if (!container) return;
@@ -289,7 +318,6 @@ window.updatePreview = function() {
     if (el) window.updateArrows(el);
 };
 
-// --- INICIALIZAÇÃO DIRETA ---
 const inputs = ['pNome', 'pId', 'pImagesUrls'];
 inputs.forEach(id => {
     const element = document.getElementById(id);

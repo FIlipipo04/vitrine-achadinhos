@@ -10,6 +10,65 @@
 </head>
 <body>
 
+    <!-- ESTILO PREMIUM DO BANNER (Cole logo abaixo de <body>) -->
+<style>
+    /* Oculta o banner por padrão */
+    #promoBanner { display: none; }
+
+    /* Quando ativado pelo JS, ele ganha esta classe automática */
+    .banner-ativo {
+        display: block !important;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: linear-gradient(90deg, #5e1a1a, #a33b3b, #7a2222, #5e1a1a);
+        background-size: 300% 100%;
+        animation: gradientShine 4s ease-in-out infinite;
+        color: #f2e7dc; /* O tom bege da sua marca */
+        text-align: center;
+        padding: 12px 20px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        cursor: pointer;
+        z-index: 9999;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+        border-bottom: 1px solid rgba(242, 231, 220, 0.3);
+        box-sizing: border-box;
+        transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .banner-ativo:hover {
+        filter: brightness(1.2);
+    }
+
+    #promoBanner .promo-icon {
+        margin-right: 8px;
+        font-size: 1.1rem;
+        vertical-align: middle;
+    }
+
+    @keyframes gradientShine {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Adiciona um espaço no topo do site para o banner não cobrir o logotipo */
+    body {
+        padding-top: 40px;
+    }
+</style>
+
+<!-- O HTML do Banner super limpo -->
+<div id="promoBanner">
+    <span class="promo-icon">✨</span>
+    <span id="promoTexto"></span>
+</div>
+
 <div class="app-container">
     <!-- Cabeçalho único e correto -->
     <div class="glass-header">
@@ -49,7 +108,7 @@
                 <div>
                     <h3 class="footer-heading">Atendimento</h3>
                     <a href="sobre.html" class="footer-pill-btn">Sobre a Curadoria</a>
-                    <p class="footer-text">contato@dressmode.com.br</p>
+                    <p class="footer-text">dressmode.br@gmail.com</p>
                 </div>
 
                 <div>

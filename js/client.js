@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyB0sfEpbNf7t6ZkYX_TFPLgNA559D5pssM",
@@ -46,6 +46,22 @@ onSnapshot(query(collection(db, "produtos"), orderBy("dataCriacao", "desc")), (s
     allProducts = [];
     snapshot.forEach((doc) => { allProducts.push({ ...doc.data(), uid: doc.id }); });
     applyFilters();
+});
+
+// Monitorar o banner de promoção
+onSnapshot(doc(db, "configuracoes", "promo"), (docSnap) => {
+    const banner = document.getElementById('promoBanner');
+    const texto = document.getElementById('promoTexto');
+    if (!docSnap.exists()) return;
+
+    const data = docSnap.data();
+    if (data.ativo) {
+        banner.classList.add('banner-ativo'); // Liga o visual bonito
+        texto.innerText = data.texto;
+        banner.onclick = () => window.open(data.link, '_blank');
+    } else {
+        banner.classList.remove('banner-ativo'); // Desliga o visual
+    }
 });
 
 // --- FUNÇÕES AUXILIARES ---
@@ -107,7 +123,7 @@ function renderFeed(productsToRender) {
         const nomeProduto = product.nome || 'Peça Exclusiva';
         let carouselHTML = '';
         images.forEach((img) => {
-            carouselHTML += `<div class="carousel-item"><img src="${img}" alt="${nomeProduto}"></div>`;
+            carouselHTML += `<div class="carousel-item"><img src="${img}" alt="${nomeProduto}" loading="lazy"></div>`;
         });
 
         const showArrows = images.length > 1;
@@ -135,7 +151,7 @@ function renderFeed(productsToRender) {
                     </div>
                     <button class="copy-btn" onclick="window.copyToClipboard('#${product.id ? product.id.toUpperCase() : ''}')">Copiar</button>
                 </div>
-                <a href="${product.link}" target="_blank" class="btn-buy">EU QUERO</a>
+                <a href="${product.link}" target="_blank" class="btn-buy" onclick="window.registrarClique('${product.uid}')">EU QUERO</a>
             </div>
         `;
         feed.innerHTML += card;
@@ -160,6 +176,17 @@ window.updateArrows = (el) => {
     
     if (prevBtn) prevBtn.disabled = (el.scrollLeft <= 0);
     if (nextBtn) nextBtn.disabled = (el.scrollLeft + el.clientWidth >= el.scrollWidth - 1);
+};
+
+window.registrarClique = async (productId) => {
+    try {
+        const docRef = doc(db, "produtos", productId);
+        await updateDoc(docRef, {
+            cliques: increment(1)
+        });
+    } catch (e) {
+        console.error("Erro ao registrar clique:", e);
+    }
 };
 
 // --- EFEITO DO CABEÇALHO DINÂMICO (COM ANTI-TREMOR) ---

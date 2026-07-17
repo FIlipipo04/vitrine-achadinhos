@@ -342,3 +342,8 @@ footer {
 
 /* Créditos bem discretos */
 .footer-credits { font-size: 0.75rem; color: #887a6f; border-top: 1px solid rgba(242, 231, 220, 0.05); padding-top: 15px; margin-top: 10px; }
+.carousel-item img {
+    background-color: #2d1212; /* Cor de fundo enquanto carrega */
+    min-height: 350px;       /* Garante o espaço ocupado antes da foto */
+    display: block;
+}

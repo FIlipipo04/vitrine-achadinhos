@@ -155,16 +155,21 @@ window.updateArrows = (el) => {
     if (prevBtn) prevBtn.disabled = (el.scrollLeft <= 0);
     if (nextBtn) nextBtn.disabled = (el.scrollLeft + el.clientWidth >= el.scrollWidth - 1);
 };
-// --- EFEITO DO CABEÇALHO DINÂMICO ---
+// --- EFEITO DO CABEÇALHO DINÂMICO (COM ANTI-TREMOR) ---
+let isHeaderScrolled = false; // Guarda o estado atual do cabeçalho
+
 window.addEventListener('scroll', () => {
     const header = document.querySelector('.glass-header');
-    if (header) {
-        // Se a tela rolar mais de 50 pixels para baixo, adiciona a classe
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            // Se voltar pro topo, remove a classe e ele volta ao tamanho normal
-            header.classList.remove('scrolled');
-        }
+    if (!header) return;
+
+    // Se descer mais de 80px, ele encolhe
+    if (window.scrollY > 80 && !isHeaderScrolled) {
+        header.classList.add('scrolled');
+        isHeaderScrolled = true;
+    } 
+    // Só volta a crescer se subir quase até o topo (menos de 20px)
+    else if (window.scrollY < 20 && isHeaderScrolled) {
+        header.classList.remove('scrolled');
+        isHeaderScrolled = false;
     }
 });

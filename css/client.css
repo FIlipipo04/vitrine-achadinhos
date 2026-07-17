@@ -300,3 +300,45 @@ body {
     color: #f2e7dc;
     transform: translateX(-5px);
 }
+/* --- RODAPÉ COMPACTO --- */
+footer {
+    margin: 20px auto 40px; /* Margem menor no topo */
+    max-width: 800px;       /* Um pouco mais estreito para focar o centro */
+    padding: 25px;          /* Menos espaço interno */
+    text-align: center; 
+    background: rgba(45, 18, 18, 0.6); 
+    border: 1px solid rgba(242, 231, 220, 0.1); 
+    border-radius: 20px;    /* Arredondamento mais contido */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3); 
+    backdrop-filter: blur(10px);
+}
+
+.footer-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: #f2e7dc; margin-bottom: 5px; }
+.footer-slogan { color: #d1c4b7; font-size: 0.9rem; margin-bottom: 20px; font-weight: 500; }
+.separator { width: 50px; height: 1px; background: rgba(242, 231, 220, 0.2); margin: 0 auto 20px; }
+
+.footer-info { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; /* Reduzi o espaço entre blocos */
+    margin-bottom: 20px; 
+}
+
+.footer-heading { font-size: 0.7rem; letter-spacing: 2px; color: #e3d5ca; text-transform: uppercase; margin-bottom: 5px; }
+.footer-text { color: #bdaea3; font-size: 0.9rem; margin: 0; }
+
+/* Botão Pílula mais compacto */
+.footer-pill-btn {
+    display: inline-block;
+    padding: 6px 16px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(242, 231, 220, 0.1);
+    border-radius: 50px;
+    color: #f2e7dc;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+}
+
+/* Créditos bem discretos */
+.footer-credits { font-size: 0.75rem; color: #887a6f; border-top: 1px solid rgba(242, 231, 220, 0.05); padding-top: 15px; margin-top: 10px; }

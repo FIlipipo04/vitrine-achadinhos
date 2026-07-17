@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
 import { getFirestore, collection, addDoc, deleteDoc, doc, updateDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 
+console.log("O script admin.js carregou!");
 const firebaseConfig = {
     apiKey: "AIzaSyB0sfEpbNf7t6ZkYX_TFPLgNA559D5pssM",
     authDomain: "conta-ttk.firebaseapp.com",
@@ -44,6 +45,10 @@ onSnapshot(query(categoriasRef, orderBy("nome", "asc")), (snapshot) => {
         const data = docSnap.data();
         const uid = docSnap.id;
         
+        // Proteção para o nome não quebrar aspas do HTML
+        const safeName = data.nome.replace(/'/g, "\\'");
+        
+        // 1. Renderiza Checkbox
         const div = document.createElement('div');
         div.innerHTML = `
             <label style="color: white; cursor: pointer; display: flex; align-items: center; gap: 5px; margin-bottom: 5px;">
@@ -52,11 +57,13 @@ onSnapshot(query(categoriasRef, orderBy("nome", "asc")), (snapshot) => {
         `;
         containerCategorias.appendChild(div);
 
+        // 2. Renderiza Botões com onclick direto (testado e garantido)
         const li = document.createElement('li');
         li.className = 'product-item';
         li.innerHTML = `
             <div class="item-info"><strong>${data.nome}</strong></div>
             <div class="action-buttons">
+                <button class="btn-icon" onclick="window.editCategory('${uid}', '${safeName}')">✏️</button>
                 <button class="btn-icon del" onclick="window.deleteCategory('${uid}')">🗑️</button>
             </div>
         `;
@@ -75,6 +82,18 @@ window.deleteCategory = async (uid) => {
     if(confirm('Apagar categoria?')) { await deleteDoc(doc(db, "categorias", uid)); window.showToast('Apagada!'); }
 };
 
+window.editCategory = async (uid, oldName) => {
+    const newName = prompt("Digite o novo nome para a categoria:", oldName);
+    if(newName && newName.trim() !== "" && newName !== oldName) {
+        try {
+            await updateDoc(doc(db, "categorias", uid), { nome: newName.trim() });
+            window.showToast('Categoria atualizada!');
+        } catch (e) {
+            window.showToast('Erro ao editar: ' + e.message, 'error');
+        }
+    }
+};
+
 // --- SISTEMA DE PRODUTOS ---
 onSnapshot(query(produtosRef, orderBy("dataCriacao", "desc")), (snapshot) => {
     products = [];
@@ -90,7 +109,6 @@ window.saveProduct = async () => {
 
     const cats = Array.from(document.querySelectorAll('input[name="cat"]:checked')).map(cb => cb.value);
     
-    // Filtro inteligente: extrai apenas a URL da imagem caso venha o HTML completo do ImgBB
     const imagesArray = imagensRaw.split(',').map(s => {
         let clean = s.trim();
         const match = clean.match(/src=["'](.*?)["']/);
@@ -116,16 +134,13 @@ window.saveProduct = async () => {
 window.editProduct = (uid) => {
     const p = products.find(p => p.uid === uid);
     if(!p) return;
-    
     document.getElementById('pNome').value = p.nome || '';
     document.getElementById('pId').value = p.id;
     document.getElementById('pLink').value = p.link;
     document.getElementById('pImagesUrls').value = Array.isArray(p.images) ? p.images.join(', ') : (p.images || '');
-    
     document.querySelectorAll('input[name="cat"]').forEach(cb => {
         cb.checked = p.categorias ? p.categorias.includes(cb.value) : false;
     });
-    
     editingId = uid;
     document.getElementById('formTitle').innerText = "Editando Peça";
     document.getElementById('submitBtn').innerText = "Atualizar Peça";
@@ -147,10 +162,7 @@ window.deleteProduct = async (uid) => {
         try {
             await deleteDoc(doc(db, "produtos", uid)); 
             window.showToast('Peça apagada com sucesso!'); 
-            // Se estiver apagando a mesma peça que está no formulário de edição, limpa o formulário
-            if (editingId === uid) {
-                window.cancelEdit();
-            }
+            if (editingId === uid) window.cancelEdit();
         } catch (e) {
             window.showToast('Erro ao apagar: ' + e.message, 'error');
         }
@@ -173,7 +185,6 @@ function renderAdminList() {
     products.forEach((p) => {
         const li = document.createElement('li');
         li.className = 'product-item';
-        const catsTexto = Array.isArray(p.categorias) ? p.categorias.join(', ') : 'Sem cat';
         li.innerHTML = `
             <div class="item-info">
                 <strong>${p.nome || 'Sem nome'}</strong> 
@@ -188,7 +199,7 @@ function renderAdminList() {
     });
 }
 
-// --- FUNÇÕES DE NAVEGAÇÃO DO CARROSSEL NO PREVIEW ---
+// --- FUNÇÕES DE NAVEGAÇÃO DO CARROSSEL E PREVIEW ---
 window.scrollCarousel = (id, direction) => {
     const container = document.getElementById(id);
     if (!container) return;
@@ -201,12 +212,10 @@ window.updateArrows = (el) => {
     if(!wrapper) return;
     const prevBtn = wrapper.querySelector('.prev');
     const nextBtn = wrapper.querySelector('.next');
-    
     if (prevBtn) prevBtn.disabled = (el.scrollLeft <= 0);
     if (nextBtn) nextBtn.disabled = (el.scrollLeft + el.clientWidth >= el.scrollWidth - 1);
 };
 
-// --- FUNÇÃO ÚNICA DE PRÉ-VISUALIZAÇÃO COM CARROSSEL E CATEGORIAS ---
 window.updatePreview = function() {
     const nomeInput = document.getElementById('pNome')?.value.trim() || 'Nome da Peça';
     const idInput = document.getElementById('pId')?.value.trim().toUpperCase() || 'ID';
@@ -221,8 +230,6 @@ window.updatePreview = function() {
 
     let carouselHTML = '';
     let arrowsHTML = '';
-    
-    // Pesca apenas o link limpo no Preview também
     const imagesArray = imageInput.split(',').map(s => {
         let clean = s.trim();
         const match = clean.match(/src=["'](.*?)["']/);
@@ -234,8 +241,8 @@ window.updatePreview = function() {
             <div style="background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; text-align: center; color: #bdaea3; border: 1px dashed #555;">
                 <h3 style="color: white; margin-bottom: 5px; font-family: 'Playfair Display', serif;">${nomeInput}</h3>
                 <span style="font-size: 0.8rem; background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 8px;">#${idInput}</span>
-                ${catsHTML} <!-- CATEGORIAS NO ESTADO VAZIO -->
-                <p style="margin-top: 15px; font-size: 0.9rem;">Cole um link de imagem para visualizar o carrossel.</p>
+                ${catsHTML}
+                <p style="margin-top: 15px; font-size: 0.9rem;">Cole um link de imagem para visualizar.</p>
             </div>
         `;
         return;
@@ -264,7 +271,7 @@ window.updatePreview = function() {
                 <div class="card-text">
                     <h3 style="font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 4px; color: #f2e7dc;">${nomeInput}</h3>
                     <span style="font-size: 0.8rem; background: rgba(242, 231, 220, 0.1); padding: 4px 10px; border-radius: 8px; color: #bdaea3; font-weight: 600;">#${idInput}</span>
-                    ${catsHTML} <!-- CATEGORIAS COM A FOTO -->
+                    ${catsHTML}
                 </div>
                 <button style="background: rgba(255,255,255,0.05); border: 1px solid rgba(242, 231, 220, 0.15); color: #f2e7dc; padding: 8px 12px; border-radius: 8px; cursor: not-allowed; opacity: 0.5;">Copiar</button>
             </div>

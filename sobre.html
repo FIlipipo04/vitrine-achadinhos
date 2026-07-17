@@ -4,42 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sobre Nós - Dress Mode</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-    <!-- Aqui está a mágica: puxamos o mesmo CSS da vitrine -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/client.css"> <!-- Mantemos o mesmo CSS para manter o estilo -->
     <link rel="stylesheet" href="css/client.css">
+    <style>
+        body { background: #1e0a0a; color: #f2e7dc; font-family: 'Montserrat', sans-serif; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #bdaea3; text-decoration: none; border-bottom: 1px solid #bdaea3; }
+        .glass-card { background: rgba(45, 18, 18, 0.6); border: 1px solid rgba(242, 231, 220, 0.15); border-radius: 24px; padding: 30px; margin-bottom: 25px; }
+        h1, h2 { font-family: 'Playfair Display', serif; color: #f2e7dc; }
+        p { line-height: 1.6; color: #d1c4b7; margin-top: 10px; }
+    </style>
 </head>
 <body>
 
-<div class="app-container">
-    <!-- Cabeçalho de Sub-página (Com botão voltar) -->
-    <div class="glass-header sub-header">
-        <a href="index.html" class="btn-back">← Voltar</a>
-        <div class="brand-title">
-            <h2>DRESS MODE</h2>
-            <h1>Nossa História</h1>
-        </div>
+<div class="container">
+    <a href="index.html" class="back-btn">← Voltar para a Vitrine</a>
+
+    <h1 style="text-align: center; margin-bottom: 40px;">Nossa História</h1>
+
+    <!-- CARD DA JULIANA -->
+    <div class="glass-card">
+        <h2 style="color: #e3d5ca;">A Mente por Trás da Curadoria</h2>
+        <p>A <strong>Dress Mode</strong> é fruto do olhar atento da <strong>Juliana</strong>. Ela é a fundadora, organizadora e a pessoa que seleciona, com todo cuidado e bom gosto, cada peça que chega até você.</p>
+        <p>O que começou como uma paixão por garimpar o que há de mais elegante, tornou-se hoje uma curadoria dedicada a quem busca estilo com autenticidade.</p>
     </div>
 
-    <!-- Conteúdo em blocos de vidro -->
-    <div class="page-content">
-        <div class="glass-panel">
-            <h3>A Curadoria</h3>
-            <p>A Dress Mode nasceu da paixão por garimpar peças únicas que unem elegância, conforto e um design atemporal. Nosso objetivo não é apenas vender roupas, mas oferecer uma curadoria de estilo.</p>
-            <p>Cada peça que você encontra aqui foi meticulosamente selecionada para garantir que você esteja sempre em sua melhor versão, seja no dia a dia ou em eventos especiais.</p>
-        </div>
-
-        <div class="glass-panel">
-            <h3>Nossa Visão</h3>
-            <p>Acreditamos que a moda é a forma mais pura de expressão pessoal. Por isso, trabalhamos para trazer tendências globais com um toque de exclusividade e sofisticação.</p>
-        </div>
+    <!-- CARD CURADORIA -->
+    <div class="glass-card">
+        <h2>Nossa Curadoria</h2>
+        <p>Cada peça que você encontra aqui foi meticulosamente escolhida para garantir que você esteja sempre em sua melhor versão. Unimos elegância, conforto e um design atemporal, prezando por itens que se destacam pela qualidade e pelo charme.</p>
     </div>
 
-    <!-- O mesmo rodapé para manter o padrão -->
-    <footer class="premium-footer">
-        <div class="footer-bottom">
-            <p>&copy; 2026 Dress Mode. Todos os direitos reservados.</p>
-        </div>
-    </footer>
+    <!-- CARD VISÃO -->
+    <div class="glass-card">
+        <h2>Nossa Visão</h2>
+        <p>Acreditamos que a moda é a forma mais pura de expressão pessoal. Nosso objetivo é trazer tendências globais com um toque de exclusividade, facilitando o acesso ao que há de melhor no mundo da moda.</p>
+    </div>
+
+    <!-- RODAPÉ DE CRÉDITOS -->
+    <div style="text-align: center; margin-top: 50px; font-size: 0.9rem; color: #bdaea3;">
+        <p>© 2026 Dress Mode. Todos os direitos reservados.</p>
+        <p style="font-size: 0.8rem; margin-top: 10px;">Desenvolvido por Filipe Souza Mello | Curadoria: Juliana Tavares Vales</p>
+    </div>
 </div>
 
 </body>

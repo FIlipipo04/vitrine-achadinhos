@@ -281,3 +281,22 @@ body {
     border-radius: 12px; /* Deixa as bordinhas arredondadas combinando com o card */
     background-color: rgba(0,0,0,0.2); /* Fundo sutil enquanto a foto carrega */
 }
+.back-btn {
+    display: inline-block;
+    padding: 8px 18px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(189, 174, 163, 0.4);
+    border-radius: 50px;
+    color: #bdaea3;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.back-btn:hover {
+    background: rgba(189, 174, 163, 0.15);
+    border-color: #f2e7dc;
+    color: #f2e7dc;
+    transform: translateX(-5px);
+}

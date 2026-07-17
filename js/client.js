@@ -155,3 +155,16 @@ window.updateArrows = (el) => {
     if (prevBtn) prevBtn.disabled = (el.scrollLeft <= 0);
     if (nextBtn) nextBtn.disabled = (el.scrollLeft + el.clientWidth >= el.scrollWidth - 1);
 };
+// --- EFEITO DO CABEÇALHO DINÂMICO ---
+window.addEventListener('scroll', () => {
+    const header = document.querySelector('.glass-header');
+    if (header) {
+        // Se a tela rolar mais de 50 pixels para baixo, adiciona a classe
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            // Se voltar pro topo, remove a classe e ele volta ao tamanho normal
+            header.classList.remove('scrolled');
+        }
+    }
+});

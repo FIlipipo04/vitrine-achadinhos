@@ -230,3 +230,35 @@ body {
 }
 .prev { left: 10px; }
 .next { right: 10px; }
+/* =========================================
+   EFEITO DO CABEÇALHO ENCOLHENDO (SCROLL)
+   ========================================= */
+
+/* Adiciona transição suave aos elementos originais */
+.glass-header, 
+.brand-title h1, 
+.brand-title h2, 
+.search-box {
+    transition: all 0.3s ease;
+}
+
+/* O que acontece quando a classe .scrolled for ativada pelo JS */
+.glass-header.scrolled {
+    padding: 10px 20px 5px; /* Diminui as bordas de cima e baixo */
+}
+
+.glass-header.scrolled .brand-title h1 {
+    font-size: 1.4rem; /* Diminui o título grandão */
+    margin-bottom: 5px;
+}
+
+.glass-header.scrolled .brand-title h2 {
+    font-size: 0; /* Some com o "Seleção Exclusiva" para poupar espaço */
+    opacity: 0;
+    margin: 0;
+    height: 0;
+}
+
+.glass-header.scrolled .search-box {
+    margin-bottom: 8px; /* Cola mais a barra de busca */
+}

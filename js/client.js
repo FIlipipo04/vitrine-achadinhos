@@ -119,3 +119,4 @@ function renderFeed(productsToRender) {
         feed.innerHTML += card;
     });
 }
+window.filterByCategory = filterByCategory;

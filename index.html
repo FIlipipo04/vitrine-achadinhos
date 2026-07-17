@@ -4,46 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dress Mode - A Coleção</title>
-    <!-- Fontes Editoriais -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Fontes Premium -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/client.css">
 </head>
 <body>
 
-<div class="container">
-    <div class="sticky-header">
-        <div class="header">
-            <h2>CURATED EDIT</h2>
-            <h1>DRESS MODE</h1>
+<div class="app-container">
+    <!-- Cabeçalho Melhorado e em PT-BR -->
+    <div class="glass-header">
+        <div class="brand-title">
+            <h2>SELEÇÃO EXCLUSIVA</h2>
+            <h1>Dress Mode</h1>
         </div>
 
-        <div class="search-container">
-            <span class="search-icon">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            </span>
-            <input type="text" id="searchInput" class="search-input" placeholder="Buscar por #ID...">
+        <div class="search-box">
+            <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="searchInput" placeholder="Buscar peça ou #ID...">
         </div>
-    </div>
-
-    <!-- Filtros Editoriais -->
-    <div class="categories" id="categoryFilters">
-        <button class="cat-btn active" onclick="filterByCategory('Tudo', this)">All</button>
-        <button class="cat-btn" onclick="filterByCategory('Dresses', this)">Dresses</button>
-        <button class="cat-btn" onclick="filterByCategory('Tops', this)">Tops</button>
-        <button class="cat-btn" onclick="filterByCategory('Bottoms', this)">Bottoms</button>
-        <button class="cat-btn" onclick="filterByCategory('Accessories', this)">Accessories</button>
+        
+        <div class="categories" id="categoryFilters">
+            <button class="cat-btn active" onclick="filterByCategory('Tudo', this)">Tudo</button>
+            <button class="cat-btn" onclick="filterByCategory('Vestidos', this)">Vestidos</button>
+            <button class="cat-btn" onclick="filterByCategory('Blusas', this)">Blusas</button>
+            <button class="cat-btn" onclick="filterByCategory('Parte de Baixo', this)">Parte de Baixo</button>
+            <button class="cat-btn" onclick="filterByCategory('Acessórios', this)">Acessórios</button>
+        </div>
     </div>
 
     <!-- Feed principal -->
     <div class="feed" id="feedContainer">
         <!-- Esqueleto de Carregamento -->
-        <div class="product-card skeleton-card">
+        <div class="glass-card skeleton-card">
             <div class="skeleton skel-img"></div>
             <div class="skeleton skel-title"></div>
-            <div class="skeleton skel-id"></div>
             <div class="skeleton skel-btn"></div>
         </div>
     </div>
+
+    <!-- Rodapé Premium (O segredo da seriedade) -->
+    <footer class="premium-footer">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>Dress Mode</h3>
+                <p>Curadoria de moda especializada. Elevando o seu estilo com peças exclusivas.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Atendimento</h4>
+                <a href="sobre.html">Nossa História</a>
+                <a href="contato.html">Fale Conosco</a>
+            </div>
+            <div class="footer-col">
+                <h4>Políticas</h4>
+                <a href="trocas.html">Trocas e Devoluções</a>
+                <a href="termos.html">Termos de Uso</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Dress Mode. Todos os direitos reservados.</p>
+        </div>
+    </footer>
 </div>
 
 <div class="toast-container" id="toastContainer"></div>

@@ -103,3 +103,69 @@ body {
 .toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 1000; }
 .toast { background: var(--text-primary); color: #170707; padding: 12px 24px; border-radius: 30px; font-weight: 600; font-size: 0.85rem; box-shadow: 0 10px 30px rgba(0,0,0,0.5); opacity: 0; transform: translateY(15px); animation: slideUp 0.4s forwards; }
 @keyframes slideUp { to { opacity: 1; transform: translateY(0); } }
+/* Correções do Cabeçalho para ficar mais elegante */
+.brand-title h2 { font-size: 0.7rem; color: #d4bda8; letter-spacing: 4px; font-weight: 600; margin-bottom: 2px;}
+.brand-title h1 { font-size: 2.4rem; letter-spacing: -1px; }
+
+/* Estilo do Rodapé Premium */
+.premium-footer {
+    background: #0f0505;
+    border-top: 1px solid var(--glass-border);
+    padding: 40px 20px 20px;
+    margin-top: 20px;
+    border-top-left-radius: 24px;
+    border-top-right-radius: 24px;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+}
+
+.footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.footer-col h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+}
+
+.footer-col h4 {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(242, 231, 220, 0.1);
+    padding-bottom: 5px;
+}
+
+.footer-col p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+.footer-col a {
+    display: block;
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+    transition: 0.3s;
+}
+
+.footer-col a:hover {
+    color: var(--text-primary);
+    transform: translateX(5px);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(242, 231, 220, 0.1);
+    font-size: 0.75rem;
+    color: rgba(189, 174, 163, 0.5);
+}

@@ -18,11 +18,23 @@ let allProducts = [];
 let currentCategory = 'Tudo';
 let currentSearch = '';
 
-// Puxar as categorias Dinâmicas do Banco
+// Definição da função para garantir que ela exista
+const filterByCategory = (cat, btnElement) => {
+    currentCategory = cat;
+    document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+    if(btnElement) btnElement.classList.add('active');
+    applyFilters();
+};
+
+// Expondo a função para o botão HTML (Isso resolve o erro "not a function")
+window.filterByCategory = filterByCategory;
+
+// Puxar as categorias Dinâmicas
 onSnapshot(query(collection(db, "categorias"), orderBy("nome", "asc")), (snapshot) => {
     const filterContainer = document.getElementById('categoryFilters');
-    // Reinicia deixando só o botão Tudo
-    filterContainer.innerHTML = '<button class="cat-btn active" onclick="filterByCategory(\'Tudo\', this)">Tudo</button>';
+    if(!filterContainer) return;
+    
+    filterContainer.innerHTML = '<button class="cat-btn active" onclick="window.filterByCategory(\'Tudo\', this)">Tudo</button>';
     
     snapshot.forEach((docSnap) => {
         const catNome = docSnap.data().nome;
@@ -43,17 +55,14 @@ onSnapshot(query(collection(db, "produtos"), orderBy("dataCriacao", "desc")), (s
     applyFilters();
 });
 
-document.getElementById('searchInput').addEventListener('keyup', (e) => {
-    currentSearch = e.target.value.replace('#', '').toUpperCase();
-    applyFilters();
-});
-
-window.filterByCategory = (cat, btnElement) => {
-    currentCategory = cat;
-    document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-    btnElement.classList.add('active');
-    applyFilters();
-};
+// Correção do erro do 'null' (Verifica se o elemento existe antes de tentar usar)
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    searchInput.addEventListener('keyup', (e) => {
+        currentSearch = e.target.value.replace('#', '').toUpperCase();
+        applyFilters();
+    });
+}
 
 function applyFilters() {
     let filtered = allProducts;
@@ -83,6 +92,7 @@ function showToast(message) {
 
 function renderFeed(productsToRender) {
     const feed = document.getElementById('feedContainer');
+    if(!feed) return;
     feed.innerHTML = '';
 
     if (productsToRender.length === 0) {
@@ -109,7 +119,7 @@ function renderFeed(productsToRender) {
                         <h3>${nomeProduto}</h3>
                         <span>#${product.id.toUpperCase()}</span>
                     </div>
-                    <button class="copy-btn" onclick="copyToClipboard('#${product.id.toUpperCase()}')" title="Copiar ID">
+                    <button class="copy-btn" onclick="window.copyToClipboard('#${product.id.toUpperCase()}')" title="Copiar ID">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
                     </button>
                 </div>
@@ -119,4 +129,3 @@ function renderFeed(productsToRender) {
         feed.innerHTML += card;
     });
 }
-window.filterByCategory = filterByCategory;

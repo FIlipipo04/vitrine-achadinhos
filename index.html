@@ -11,20 +11,25 @@
 <body>
 
 <div class="app-container">
-    <!-- Cabeçalho Melhorado e em PT-BR -->
+    <!-- Cabeçalho único e correto -->
     <div class="glass-header">
         <div class="brand-title">
             <h2>SELEÇÃO EXCLUSIVA</h2>
             <h1>Dress Mode</h1>
         </div>
-        
-        <div class="categories" id="categoryFilters">
-            <button class="cat-btn active" onclick="filterByCategory('Tudo', this)">Tudo</button>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Buscar peça ou #ID...">
         </div>
+
+        <div class="categories" id="categoryFilters">
+            <button class="cat-btn active" onclick="window.filterByCategory('Tudo', this)">Tudo</button>
+        </div>
+    </div>
 
     <!-- Feed principal -->
     <div class="feed" id="feedContainer">
-        <!-- Esqueleto de Carregamento -->
+        <!-- Esqueleto será carregado aqui -->
         <div class="glass-card skeleton-card">
             <div class="skeleton skel-img"></div>
             <div class="skeleton skel-title"></div>
@@ -32,22 +37,21 @@
         </div>
     </div>
 
-    <!-- Rodapé Premium (O segredo da seriedade) -->
+    <!-- Rodapé -->
     <footer class="premium-footer">
         <div class="footer-content">
             <div class="footer-col">
                 <h3>Dress Mode</h3>
-                <p>Curadoria de moda especializada. Elevando o seu estilo com peças exclusivas.</p>
+                <p>Curadoria de moda especializada. Selecionamos o melhor da tendência para você.</p>
             </div>
             <div class="footer-col">
                 <h4>Atendimento</h4>
-                <a href="sobre.html">Nossa História</a>
-                <a href="contato.html">Fale Conosco</a>
+                <a href="sobre.html">Sobre a Curadoria</a>
+                <a href="mailto:contato@dressmode.com.br">contato@dressmode.com.br</a>
             </div>
             <div class="footer-col">
-                <h4>Políticas</h4>
-                <a href="trocas.html">Trocas e Devoluções</a>
-                <a href="termos.html">Termos de Uso</a>
+                <h4>Transparência</h4>
+                <p style="font-size: 0.75rem;">Somos parceiros afiliados. A responsabilidade pela venda e entrega é da plataforma parceira.</p>
             </div>
         </div>
         <div class="footer-bottom">

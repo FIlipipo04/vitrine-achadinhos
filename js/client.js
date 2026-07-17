@@ -18,24 +18,20 @@ let allProducts = [];
 let currentCategory = 'Tudo';
 let currentSearch = '';
 
-// Definição da função para garantir que ela exista
+// --- SISTEMA DE FILTROS ---
 const filterByCategory = (cat, btnElement) => {
     currentCategory = cat;
     document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
     if(btnElement) btnElement.classList.add('active');
     applyFilters();
 };
-
-// Expondo a função para o botão HTML (Isso resolve o erro "not a function")
 window.filterByCategory = filterByCategory;
 
-// Puxar as categorias Dinâmicas
+// --- PUXAR DADOS DO FIREBASE ---
 onSnapshot(query(collection(db, "categorias"), orderBy("nome", "asc")), (snapshot) => {
     const filterContainer = document.getElementById('categoryFilters');
     if(!filterContainer) return;
-    
     filterContainer.innerHTML = '<button class="cat-btn active" onclick="window.filterByCategory(\'Tudo\', this)">Tudo</button>';
-    
     snapshot.forEach((docSnap) => {
         const catNome = docSnap.data().nome;
         const btn = document.createElement('button');
@@ -46,16 +42,13 @@ onSnapshot(query(collection(db, "categorias"), orderBy("nome", "asc")), (snapsho
     });
 });
 
-// Puxar os produtos
 onSnapshot(query(collection(db, "produtos"), orderBy("dataCriacao", "desc")), (snapshot) => {
     allProducts = [];
-    snapshot.forEach((doc) => {
-        allProducts.push({ ...doc.data(), uid: doc.id });
-    });
+    snapshot.forEach((doc) => { allProducts.push({ ...doc.data(), uid: doc.id }); });
     applyFilters();
 });
 
-// Correção do erro do 'null' (Verifica se o elemento existe antes de tentar usar)
+// --- FUNÇÕES AUXILIARES ---
 const searchInput = document.getElementById('searchInput');
 if (searchInput) {
     searchInput.addEventListener('keyup', (e) => {
@@ -67,7 +60,10 @@ if (searchInput) {
 function applyFilters() {
     let filtered = allProducts;
     if(currentCategory !== 'Tudo') {
-        filtered = filtered.filter(p => p.categoria === currentCategory);
+        filtered = filtered.filter(p => {
+            const categoriasDoProduto = p.categorias || [p.categoria];
+            return categoriasDoProduto.includes(currentCategory);
+        });
     }
     if(currentSearch !== '') {
         filtered = filtered.filter(p => p.id.toUpperCase().includes(currentSearch) || (p.nome && p.nome.toUpperCase().includes(currentSearch)));
@@ -76,9 +72,7 @@ function applyFilters() {
 }
 
 window.copyToClipboard = (text) => {
-    navigator.clipboard.writeText(text).then(() => {
-        showToast(`${text} copiado!`);
-    });
+    navigator.clipboard.writeText(text).then(() => showToast(`${text} copiado!`));
 };
 
 function showToast(message) {
@@ -90,42 +84,74 @@ function showToast(message) {
     setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 300); }, 2500);
 }
 
+// --- RENDERIZAR FEED ---
 function renderFeed(productsToRender) {
     const feed = document.getElementById('feedContainer');
     if(!feed) return;
     feed.innerHTML = '';
 
     if (productsToRender.length === 0) {
-        feed.innerHTML = '<p style="text-align: center; color: var(--text-muted); margin-top: 50px; font-weight: 500;">Nenhuma peça encontrada.</p>';
+        feed.innerHTML = '<p style="text-align: center; color: var(--text-muted); margin-top: 50px;">Nenhuma peça encontrada.</p>';
         return;
     }
 
     productsToRender.forEach(product => {
-        let images = typeof product.images === 'string' ? product.images.split(',').map(img => img.trim()) : product.images;
+        let images = typeof product.images === 'string' ? product.images.split(',').map(img => img.trim()) : (product.images || []);
         const nomeProduto = product.nome || 'Peça Exclusiva';
         let carouselHTML = '';
-        
         images.forEach((img) => {
-            carouselHTML += `<div class="carousel-item"><img src="${img}" alt="${nomeProduto}" loading="lazy"></div>`;
+            carouselHTML += `<div class="carousel-item"><img src="${img}" alt="${nomeProduto}"></div>`;
         });
+
+        const showArrows = images.length > 1;
+        const arrowsHTML = showArrows ? `
+            <button class="nav-btn prev" onclick="window.scrollCarousel('carousel-${product.uid}', -1)">❮</button>
+            <button class="nav-btn next" onclick="window.scrollCarousel('carousel-${product.uid}', 1)">❯</button>
+        ` : '';
+
+        // --- AQUI PEGAMOS AS CATEGORIAS PARA EXIBIR ---
+        const catsTexto = Array.isArray(product.categorias) ? product.categorias.join(', ') : (product.categoria || '');
+        const catsHTML = catsTexto ? `<div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 6px; font-weight: 500;">📁 ${catsTexto}</div>` : '';
 
         const card = `
             <div class="glass-card">
                 <div class="carousel-wrapper">
-                    <div class="carousel-container">${carouselHTML}</div>
+                    <div class="carousel-container" id="carousel-${product.uid}" onscroll="window.updateArrows(this)">
+                        ${carouselHTML}
+                    </div>
+                    ${arrowsHTML}
                 </div>
                 <div class="card-info">
                     <div class="card-text">
                         <h3>${nomeProduto}</h3>
-                        <span>#${product.id.toUpperCase()}</span>
+                        <span>#${product.id ? product.id.toUpperCase() : ''}</span>
+                        ${catsHTML} <!-- CATEGORIAS INSERIDAS AQUI -->
                     </div>
-                    <button class="copy-btn" onclick="window.copyToClipboard('#${product.id.toUpperCase()}')" title="Copiar ID">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-                    </button>
+                    <button class="copy-btn" onclick="window.copyToClipboard('#${product.id ? product.id.toUpperCase() : ''}')">Copiar</button>
                 </div>
                 <a href="${product.link}" target="_blank" class="btn-buy">EU QUERO</a>
             </div>
         `;
         feed.innerHTML += card;
+        
+        const el = document.getElementById(`carousel-${product.uid}`);
+        if (el) window.updateArrows(el);
     });
 }
+
+// --- FUNÇÕES DE NAVEGAÇÃO (FORA DE TUDO!) ---
+window.scrollCarousel = (id, direction) => {
+    const container = document.getElementById(id);
+    if (!container) return;
+    const scrollAmount = container.clientWidth;
+    container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
+};
+
+window.updateArrows = (el) => {
+    const wrapper = el.parentElement;
+    const prevBtn = wrapper.querySelector('.prev');
+    const nextBtn = wrapper.querySelector('.next');
+    
+    if (prevBtn) prevBtn.disabled = (el.scrollLeft <= 0);
+    if (nextBtn) nextBtn.disabled = (el.scrollLeft + el.clientWidth >= el.scrollWidth - 1);
+};

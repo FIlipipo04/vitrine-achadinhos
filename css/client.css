@@ -20,7 +20,7 @@ body {
     min-height: 100vh;
 }
 
-.app-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; }
+.app-container { width: 100%; max-width: 900px; display: flex; flex-direction: column; }
 
 /* Header Flutuante de Vidro */
 .glass-header {
@@ -61,12 +61,11 @@ body {
 .cat-btn.active { background: var(--text-primary); color: #170707; border-color: var(--text-primary); box-shadow: 0 4px 15px rgba(242, 231, 220, 0.2); }
 
 /* Feed e Cards de Vidro (Parrudos) */
-.feed { display: flex; flex-direction: column; gap: 25px; padding: 25px 20px 80px; }
-.glass-card { 
-    background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border); border-radius: 20px; 
-    padding: 15px; box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-    animation: fadeIn 0.6s ease-out forwards;
+.feed { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+    gap: 25px; 
+    padding: 25px 20px 80px; 
 }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -75,7 +74,13 @@ body {
 .carousel-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
 .carousel-container::-webkit-scrollbar { display: none; }
 .carousel-item { min-width: 100%; scroll-snap-align: center; }
-.carousel-item img { width: 100%; height: 420px; object-fit: cover; display: block; }
+.carousel-item img { 
+    width: 100%; 
+    height: 350px; 
+    object-fit: cover; 
+    object-position: center center; /* Força o foco sempre no meio da imagem */
+    display: block; 
+}
 
 /* Título e Botões do Card */
 .card-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
@@ -199,3 +204,29 @@ body {
 }
 .contact-input::placeholder { color: rgba(189, 174, 163, 0.4); }
 .contact-input:focus { border-color: var(--text-primary); background: rgba(0,0,0,0.5); }
+.carousel-wrapper { position: relative; }
+.carousel-wrapper { position: relative; }
+.nav-btn { 
+    position: absolute; 
+    top: 50%; 
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.6); 
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    padding: 12px; 
+    cursor: pointer; 
+    border-radius: 50%;
+    z-index: 10;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+.nav-btn:hover { background: rgba(0,0,0,0.8); transform: translateY(-50%) scale(1.1); }
+
+/* A mágica acontece aqui: quando o botão estiver desativado */
+.nav-btn:disabled { 
+    opacity: 0.2; 
+    cursor: not-allowed; 
+    pointer-events: none; /* Impede o clique */
+}
+.prev { left: 10px; }
+.next { right: 10px; }
